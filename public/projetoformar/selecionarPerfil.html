@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+
+        <title>Projeto FORMAR</title>        
+
+    </head>
+    
+	<style>
+	
+		.ui-panel-inner {
+			padding: 0px; 
+		}
+		
+		input[type=number]::-webkit-inner-spin-button, 
+		input[type=number]::-webkit-outer-spin-button { 
+	  		-webkit-appearance: none; 
+	  		margin: 0; 
+		}	
+	
+	</style>  
+	
+	<script>
+	
+	var navigation = window.localStorage.getItem("herbiee_navigation");
+	if(navigation != null){
+	    var s = navigation;
+	    
+	    iduser_ = s.substr(0,s.indexOf(';;;;'));
+	    if(s.indexOf(',,,,') == -1){
+	    	email_ = s.substr(s.indexOf(';;;;')+4,s.lentgh);
+	    	perfil_ = null;
+	    }else{
+	    	email_ = s.substr(s.indexOf(';;;;')+4,s.indexOf(',,,,')-(s.indexOf(';;;;')+4));
+	    	perfil_ = s.substr(s.indexOf(',,,,')+4,s.lentgh);
+	    }
+	    
+	}
+	
+	if(iduser_ == null || email_ == null){
+		$(window).attr('location','login.html');
+	}	
+	
+	$.ajax({
+		type : 'GET',
+		url : "/apps/public/obterPerfis/"+email_+"/"+iduser_+"/projetoformar",
+		dataType : 'json',
+		success : function(data) {
+			if (data.status == true) {
+
+				var list = data;
+				
+				if(list.Perfil.length > 0){
+					
+				    var urlParams;
+					//Recupera param get
+					(window.onpopstate = function () {
+					    var match,
+					        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+					        search = /([^&=]+)=?([^&]*)/g,
+					        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+					        query  = window.location.search.substring(1);
+
+					    urlParams = {};
+					    while (match = search.exec(query))
+					       urlParams[decode(match[1])] = decode(match[2]);
+					})();
+					
+					//perfil_ = list.Perfil[0].id_perfil;
+					if(perfil_ != null){
+						window.localStorage.setItem("herbiee_navigation", iduser_ + ';;;;' + email_ + ',,,,' + perfil_);
+					}
+					
+					if(urlParams.ok == null){
+						if(list.Perfil.length == 1 && perfil_ == null){
+							window.localStorage.setItem("herbiee_navigation", iduser_ + ';;;;' + email_ + ',,,,' + list.Perfil[0].id_perfil);
+							redirecionar(list.Perfil[0].id_perfil);
+						}else if(perfil_ != null){
+							redirecionar(perfil_);
+						}
+					}
+				}
+			}
+
+		},
+		error : function() {
+		}
+	});
+	</script>  
+	
+	<body>
+	
+	<!-- Page starts here -->
+		<div data-role="page" data-theme="a" id="page1">
+
+		<div data-role="panel" id="menu" data-position="left" data-display="push" data-dismissible="true" style="background-color: #33B5E5;padding: 0px">
+			
+			<div><img src="img/fundo_menu.png" style="width: 100%; height: 100px"></div>
+			<div><img src="img/user.png" style="margin-left:5px; width: 40px;position: absolute; top: 10px;"></div>
+			<div id="emailUsuario" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 80px;" ></div>			
+			<div style="margin: 5px">
+				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="redirecionarTela(4)" style="text-align: left;">Home</a>			
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="redirecionarTela(5)" style="text-align: left;" >Meus Dados</a>
+				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="redirecionarTela(2)" style="text-align: left;">Sair</a>
+			</div>
+			
+		</div>
+		<!-- menu  -->
+		
+		<!-- home -->
+		<div data-role="panel" id="home" data-position="right" data-display="push" data-dismissible="true" data-theme="a" style="background-color: #a50a0c;padding: 0px">
+			
+				<div><img src="img/fundo_eventos.png" style="width: 100%; height: 100px"></div>
+				
+				<div style="margin: 5px">
+					  
+					  <div class="ui-corner-all" align="center">
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					  </div>
+					  
+					  <br/>
+					  
+					  <ul id="eventoRecente" data-inset="true" data-role="listview">
+					  </ul>
+					  
+				</div>
+			
+		</div>
+		<!-- home  -->		
+		
+		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
+			<h1 id="tituloPagina">Projeto FORMAR</h1>
+			<!-- <a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
+			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a> -->			
+		</div>
+		
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacaoExclusao" name="contentDialogConfirmacaoExclusao">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="50%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmarExclusao()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao1" name="contentDialogConfirmacao1">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_1" style="font-size: 20px"></div>
+				<table width="0%" style="padding: 10px">
+					<tr>
+						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="33%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" onclick="recusar1()" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="33%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmar1()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>		
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao2" name="contentDialogConfirmacao2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="50%" align="left"><a id="buttonSim2" name="buttonSim2" onclick="confirmar2()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>					
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->		
+
+		<div data-role="content" id="contentMain" name="contentMain">
+		
+			<div id="formulario" class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em; background-color: #B2DFDB">
+			
+				<div id="perfis">
+					<fieldset data-role="controlgroup" id="perfil">
+					</fieldset>
+				</div>
+				
+			</div>
+			
+			<br/><p align="right"><a href="#" id="btnIncluirMaisPerfil">Incluir mais perfil</a></p>		
+			
+			<div id="formulario2" class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em; background-color: #B2DFDB;display: none;">
+			
+				<div id="perfis2">
+					<p>
+						<input type="checkbox" value="1" id="perfilAluno" name="perfilAluno"/>
+						<label for="perfilAluno">ALUNO</label>
+						<input type="checkbox" value="4" id="perfilComissao" name="perfilComissao"/>
+						<label for="perfilComissao">COMISSÃO</label>
+						<input type="checkbox" value="2" id="perfilFornecedor" name="perfilFornecedor"/>
+						<label for="perfilFornecedor">FORNECEDOR</label>
+					</p>
+				</div>
+				
+				<table width="100%">
+					<tr>
+						<td id="btnConfirmar" style="width: 50%" align="right"><input type="submit" value="Confirmar" data-inline="true" data-theme="b"/></td>
+					</tr>
+				</table>						
+						
+			</div>						
+			
+		</div>
+
+		<!-- contentMain -->
+</div> <!-- page1 -->
+　
+<!-- Page ends here -->
+</body>
+
+			<script>
+			
+			 	var perfil_;
+			 	
+			 	var lista;
+			
+				$(document).ready(
+						function() {
+							
+							$(".ui-content").css("padding","0em");
+							
+							carregarPerfis();
+						});
+				
+				function resetar(){
+					$('#formulario').css('background-color','#B2DFDB');
+					//$('#btnConfirmar').hide();
+					$('#btnExcluir').hide();
+					$('#btnCancelar').hide();
+					$('#btnCadastrar').show();
+					$('#btnVoltar').show();
+					$('#id').val(null);
+					$("#nome").val('');
+					$("#identificacao").val('');
+					$("#endereco").val('');
+					$("#telefone").val('');
+					$("#tipoFornecedor").val(null);
+					$('#tipoFornecedor').selectmenu('refresh');
+					$("#file").val('');
+					$("#flexcluir").val(null);
+					$("#midia").empty();
+				}
+
+				function carregarPerfis() {
+
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type : 'GET',
+						url : "/apps/public/obterPerfis/"+email_+"/"+iduser_+"/projetoformar",
+						dataType : 'json',
+						success : function(data) {
+							if (data.status == true) {
+
+								var list = data;
+								lista = data;
+								$('#perfis').empty();
+								
+								for(i=0;i<list.Perfil.length;i++){
+								    if(list.Perfil[i].id_perfil == perfil_){
+								    	$('#perfis').append('<input type="button" onclick="selecionar('+list.Perfil[i].id_perfil+')" data-theme="b" value='+list.Perfil[i].descricao+' name="per_'+list.Perfil[i].id_perfil+'" id="per_'+list.Perfil[i].id_perfil+'">');
+								    }else{
+								    	$('#perfis').append('<input type="button" onclick="selecionar('+list.Perfil[i].id_perfil+')" value='+list.Perfil[i].descricao+' name="per_'+list.Perfil[i].id_perfil+'" id="per_'+list.Perfil[i].id_perfil+'">');
+								    }
+								    
+								}
+								
+								$("#perfis").trigger("create");
+
+								$.mobile.loading( "hide" );
+	
+							}
+	
+						},
+						error : function() {
+							$.mobile.loading("hide");
+						}
+					});
+				}
+				
+				function redirecionar(perfil){
+					if(perfil == 1)
+						$(window).attr('location','homeAluno.html');
+					else if(perfil == 2)
+						$(window).attr('location','homeFornecedor.html');
+					else if(perfil == 3)
+						$(window).attr('location','homeAdministrador.html');
+					else if(perfil == 4)
+						$(window).attr('location','homeComissao.html');
+				}
+				
+				function selecionar(perfil){
+					window.localStorage.setItem("herbiee_navigation", iduser_ + ';;;;' + email_ + ',,,,' + perfil);
+					redirecionar(perfil);
+				}
+
+				function editar(id, nome, identificacao, endereco, telefone, tipoFornecedor, caminho_midia){
+					
+					$('#formulario').css('background-color','#F4FF81');
+					$('#btnCadastrar').hide();
+					$('#btnVoltar').hide();
+					//$('#btnConfirmar').show();
+					$('#btnExcluir').show();
+					$('#btnCancelar').show();
+					$('#id').val(id);
+					
+					$("#nome").val(nome);
+					$("#identificacao").val(identificacao);
+					$("#endereco").val(endereco);
+					$("#telefone").val(telefone);
+					$("#file").val('');
+					$('#tipoFornecedor').val(tipoFornecedor);
+					$('#tipoFornecedor').selectmenu('refresh');
+					$("#midia").empty();
+					if(caminho_midia != null){
+						$("#midia").append('<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'uploads/' + 
+								caminho_midia + '\') center center / 200%;"/>');
+					}
+					
+					//$("#file").focus();
+					
+					isArquivoGrande = false;
+
+				}
+				
+				function excluir(){
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServer2").empty();
+					$("#msgServer2").append("Confirma a exclusão do registro?");
+
+					showContentDialogConfirmacaoExclusao();					
+
+				}
+				
+				function confirmarExclusao(){
+					$('#flexcluir').val('1');
+					$('#form1').submit();
+					hideContentDialogConfirmacaoExclusao();
+					showMain();
+					resetar();
+				}
+				
+				$('#btnIncluirMaisPerfil').click(
+						function(){
+							
+							if($('#formulario2').is(':visible'))
+						    	$('#formulario2').hide();
+							else
+						    	$('#formulario2').show();
+							
+							for(i=0;i<lista.Perfil.length;i++){
+							
+								if(lista.Perfil[i].id_perfil == 1){
+									$('#perfilAluno').prop("checked", true).checkboxradio('refresh');
+									$('#perfilAluno').attr("disabled", true);
+								}else if(lista.Perfil[i].id_perfil == 2){
+									$('#perfilFornecedor').prop("checked", true).checkboxradio('refresh');
+									$('#perfilFornecedor').attr("disabled", true);
+								}else if(lista.Perfil[i].id_perfil == 4){
+									$('#perfilComissao').prop("checked", true).checkboxradio('refresh');
+									$('#perfilComissao').attr("disabled", true);
+								}
+							
+							}
+							
+							$('#btnConfirmar').show();
+							
+				});	
+				
+				$('#btnConfirmar').click(
+					function(){
+						
+						$.mobile.loading("show");
+						
+						var allVals = [];
+					     $('#perfis2 :checked').each(function() {
+					       allVals.push($(this).val());
+					     });
+					     
+						$.ajax({
+							type: 'POST',
+							data: {"email" : email_, "iduser": iduser_, "app" : "projetoformar", "perfis" : allVals},
+							url: '/apps/public/incluirPerfil',
+							dataType: 'json',
+							success: function(data){
+								
+								$(window).attr('location','selecionarPerfil.html?ok=1');
+							    
+							},
+							error: function(data){
+							    
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append(JSON.parse(data.responseText));
+							    
+							    showContentDialog2(data);						    
+							    
+							}
+						});	
+						
+						$.mobile.loading("hide");	
+						
+						
+					}
+				);	
+			</script>
+			
+			<script src="js/jsGeral.js"></script>
+			<script src="js/jsCadastros.js"></script>	
+
+</html>

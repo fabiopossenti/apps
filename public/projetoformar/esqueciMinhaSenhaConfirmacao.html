@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+		
+		<!-- script type="text/javascript" src="http://crypto-js.googlecode.com/svn/tags/2.5.4/build/crypto/crypto-min.js"></script-->
+
+        <title>Projeto FORMAR</title>        
+        
+        <script>
+			
+			/**************** FORMULARIO *****************/
+
+			// Global declarations - assignments made in $(document).ready() below
+			var hdrMainvar = null;
+			var contentMainVar = null;
+			var ftrMainVar = null;
+			var contentTransitionVar = null;
+			var form1var = null;
+			var confirmationVar = null;
+			var contentDialogVar = null;
+			var contentDialog2Var = null;	
+			var contentDialog3Var = null;	
+			var hdrConfirmationVar = null;
+			var contentConfirmationVar = null;
+			var ftrConfirmationVar = null;
+			var inputMapVar = null;
+			// Constants
+			var MISSING = "missing";
+			var EMPTY = "";
+			var NO_STATE = "ZZ";
+
+			var isManterConectado;
+			
+			var key;
+			var email;
+			
+			/**************** FORMULARIO *****************/
+			
+			</script>
+        
+       
+
+    </head>
+	
+	
+	<body>
+	
+	<!-- Page starts here -->
+		<div data-role="page" data-theme="a" id="page1" style="display: none;">
+		<div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="false">
+			<h1>Projeto FORMAR <br/>Nova Senha</h1>
+		</div>
+		<div data-role="content" id="contentMain" name="contentMain">
+		
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+	        
+				<form id="form1">
+					<!-- div id="emailDiv" data-role="fieldcontain"-->
+						<p>
+							<label for="senha">Nova Senha:</label>
+							<input id="senha" name="senha_r" type="password" class="ui-bar-c" value=""/>
+						</p>
+						<p>
+							<label for="senhaconf">Confirmação Senha:</label>
+							<input id="senhaconf" name="senhaconf_r" type="password" class="ui-bar-c" value=""/>
+						</p>
+				
+					<table width="100%">
+						<!-- <tr>
+							<td colspan="2" align="left"><input id="btnLimparTudo" type="button" value="Limpar" data-inline="true" /></td>
+						</tr> -->					
+						<tr>
+							<td style="width: 50%"><input id="btnCancelar" type="button" value="Cancelar" data-inline="true" data-theme="a"/></td>
+							<td style="width: 50%" align="right"><input type="submit" value="Confirmar" data-inline="true" data-theme="b"/></td>
+						</tr>
+					</table>
+					
+					<!-- /div-->
+				</form>
+				
+			</div>
+		</div>
+
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div>Por favor, preencha todos os campos obrigatórios.</div>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div id="msgServer" style="font-size: 20px"></div>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>		
+		
+		<div align="CENTER" data-role="content" id="contentDialog3" name="contentDialog3">
+			<div id="msgServer3" style="font-size: 20px"></div>
+			<a id="buttonOK3" name="buttonOK3" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>		
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->
+		
+				
+
+</div> <!-- page1 -->
+　
+<!-- Page ends here -->
+</body>
+
+			<script>
+				$(document).ready(
+					function() {
+						// Assign global variables
+						hdrMainVar = $('#hdrMain');
+						contentMainVar = $('#contentMain');
+						ftrMainVar = $('#ftrMain');
+						contentTransitionVar = $('#contentTransition');
+						form1Var = $('#form1');
+						confirmationVar = $('#confirmation');
+						contentDialogVar = $('#contentDialog');
+						contentDialog2Var = $('#contentDialog2');	
+						contentDialog3Var = $('#contentDialog3');
+						hdrConfirmationVar = $('#hdrConfirmation');
+						contentConfirmationVar = $('#contentConfirmation');
+						ftrConfirmationVar = $('#ftrConfirmation');
+						inputMapVar = $('input[name*="_r"]');
+						hideContentDialog();
+						hideContentDialog2();
+						hideContentDialog3();
+						hideContentTransition();
+						hideConfirmation();
+						
+					    var urlParams;
+						//Recupera param get
+						(window.onpopstate = function () {
+						    var match,
+						        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+						        search = /([^&=]+)=?([^&]*)/g,
+						        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+						        query  = window.location.search.substring(1);
+	
+						    urlParams = {};
+						    while (match = search.exec(query))
+						       urlParams[decode(match[1])] = decode(match[2]);
+						})();
+						
+						if(urlParams.key != null && urlParams.email != null){
+							$.ajax({
+								type: 'POST',
+								data: {"key" : urlParams.key, "email" : urlParams.email, "app" : "projetoformar"},
+								url: '/apps/public/esqueciMinhaSenhaConfirmacao',
+								dataType: 'json',
+								success: function(data){
+										
+									key = urlParams.key;
+									email = urlParams.email;
+									
+									$("#page1").show();
+								    
+								},
+								error: function(data){
+								    
+									$(window).attr('location','login.html?frommenu=1');						    
+								    
+								}
+							});							
+						}else{
+							$(window).attr('location','login.html?frommenu=1');							
+						}
+						
+
+						
+						/* $('#btnLimparTudo').click(
+								function() {
+									$('#email').val("");
+									$('#senha').val("");
+									$('#senhaconf').val("");
+									$('#placa_ltr').val("");
+									$('#btnLimpar').hide();
+						}); */
+						
+					});
+				
+				$('#btnCancelar').click(
+					function(){
+					    $(window).attr('location','login.html?frommenu=1');
+					});			
+				
+				$('#buttonOK').click(
+					function() {
+						hideContentDialog();
+						showMain();
+						return false;
+					});
+				
+				$('#buttonOK2').click(
+					function() {
+						hideContentDialog2();
+						showMain();
+						return false;
+					});	
+				
+				$('#buttonOK3').click(
+						function() {
+							hideContentDialog3();
+							showMain();
+							$(window).attr('location','login.html?frommenu=1');
+							return false;
+						});				
+				
+				$('#form1').submit(
+					function() {
+						var err = false;
+						// Hide the Main content
+						hideMain();
+						
+						// Reset the previously highlighted form elements
+						inputMapVar.each(
+							function(index){
+									$(this).prev().removeClass(MISSING);
+							});
+						
+						// Perform form validation
+						inputMapVar.each(
+							function(index){
+								if($(this).val()==null || $(this).val()==EMPTY){
+									$(this).prev().addClass(MISSING);
+									err = true;
+								}
+							});
+	
+						// If validation fails, show Dialog content
+						if(err == true){
+							showContentDialog();
+							return false;
+						}
+	
+						// If validation passes, show Transition content
+						showContentTransition();
+						
+						//alert($('#placa_ltr').val() + $('#placa_num').val());
+						
+						$.ajax({
+							type: 'POST',
+							data: {"password" : $('#senha').val(), "confirmation" : $('#senhaconf').val(), "key" : key, "email" : email, "app" : "projetoformar"},
+							url: '/apps/public/esqueciMinhaSenhaAtualizacaoSenha',
+							dataType: 'json',
+							success: function(data){			
+							
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer3").empty();
+							    $("#msgServer3").append("Senha alterada com sucesso!");
+							    
+							    showContentDialog3("Senha alterada com sucesso!");
+							    
+							},
+							error: function(data){
+								
+								if(formatarMsgErro(data.responseText) == "As senhas nao conferem!"){
+								    hideMain();
+								    
+								    hideContentTransition();
+								    
+								    $("#msgServer").empty();
+								    $("#msgServer").append("As senhas nao conferem!");
+								    
+								    showContentDialog2(data);									
+								}else{								
+   
+								    hideMain();
+								    
+								    hideContentTransition();
+								    
+								    $("#msgServer").empty();
+								    $("#msgServer").append(formatarMsgErro(data.responseText));
+								    
+								    showContentDialog3(data);
+									
+								}
+						    
+							}
+						});
+							
+												
+							
+						return false;
+					});
+	
+					function hideMain(){
+						hdrMainVar.hide();
+						contentMainVar.hide();
+						ftrMainVar.hide();
+					}
+	
+					function showMain(){
+						hdrMainVar.show();
+						contentMainVar.show();
+						ftrMainVar.show();
+					}
+	
+					function hideContentTransition(){
+						contentTransitionVar.hide();
+					}
+	
+					function showContentTransition(){
+						contentTransitionVar.show();
+					}
+	
+					function hideContentDialog(){
+						contentDialogVar.hide();
+					}
+	
+					function hideContentDialog2(){
+						contentDialog2Var.hide();
+					}				
+	
+					function showContentDialog(){
+						contentDialogVar.show();
+					}
+					
+					function showContentDialog2(data){
+						contentDialog2Var.show();
+					}
+					
+					function showContentDialog3(data){
+						contentDialog3Var.show();
+					}	
+					
+					function hideContentDialog3(){
+						contentDialog3Var.hide();
+					}					
+	
+					function hideConfirmation(){
+						hdrConfirmationVar.hide();
+						contentConfirmationVar.hide();
+						ftrConfirmationVar.hide();
+					}
+	
+					function showConfirmation(){
+						hdrConfirmationVar.show();
+						contentConfirmationVar.show();
+						ftrConfirmationVar.show();
+					}
+			</script> 
+
+</html>

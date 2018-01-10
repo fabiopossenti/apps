@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+		
+        <title>Onde cê tá?</title> 
+        
+        <style>
+  			#map {
+    			height: 100px;
+    			width: 100%;
+  			}
+		  html, body {
+		    height: 100%;
+		    width: 100%;
+		    margin: 0;
+		    padding: 0;
+		  }
+		  
+			.ui-panel-inner {
+				padding: 0px; 
+			}
+			
+			input[type=number]::-webkit-inner-spin-button, 
+			input[type=number]::-webkit-outer-spin-button { 
+		  		-webkit-appearance: none; 
+		  		margin: 0; 
+			}		  
+		  
+		</style>       
+
+    </head>
+	
+	<body>
+	
+	<!-- Page starts here -->
+		<div data-role="page" data-theme="a" id="page1">
+		<!-- <div id="corpo_"></div>
+		<div id="menu_"></div> -->
+		
+		<div data-role="panel" id="menu" data-position="left" data-display="push" data-dismissible="true" style="background-color: #33B5E5;padding: 0px">
+			
+			<div><img src="img/fundo_menu.png" style="width: 100%; height: 100px"></div>
+			<div><img src="img/user.png" style="margin-left:5px; width: 40px;position: absolute; top: 10px;"></div>
+			<div id="emailUsuario" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 80px;" ></div>			
+			<div style="margin: 5px">
+				<!-- <a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="redirecionarTela(4)" style="text-align: left;">Home</a>			
+				<a data-role="button" data-position-to="window" href="#" style="text-align: left;" data-theme="b">Cadastros</a>
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="redirecionarTela(1)" style="text-align: left;" >Tipo de Fornecedor</a>
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="redirecionarTela(3)" style="text-align: left;" >Fornecedor</a> -->
+				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="redirecionarTela(2)" style="text-align: left;">Sair</a>
+			</div>
+			
+		</div>
+		<!-- menu  -->
+		
+		<!-- home -->
+		<div data-role="panel" id="home" data-position="right" data-display="push" data-dismissible="true" data-theme="a" style="background-color: #a50a0c;padding: 0px">
+			
+				<div><img src="img/fundo_eventos.png" style="width: 100%; height: 100px"></div>
+				
+				<div style="margin: 5px">
+					  
+					  <div class="ui-corner-all" align="center">
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					  </div>
+					  
+					  <br/>
+					  
+					  <ul id="eventoRecente" data-inset="true" data-role="listview">
+					  </ul>
+					  
+				</div>
+			
+		</div>
+		<!-- home  -->		
+		
+		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
+			<h1 id="tituloPagina">Projeto FORMAR</h1>
+			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
+			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
+		</div>
+		
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacaoExclusao" name="contentDialogConfirmacaoExclusao">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="50%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmarExclusao()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao1" name="contentDialogConfirmacao1">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_1" style="font-size: 20px"></div>
+				<table width="0%" style="padding: 10px">
+					<tr>
+						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="33%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" onclick="recusar1()" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="33%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmar1()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>		
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao2" name="contentDialogConfirmacao2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="50%" align="left"><a id="buttonSim2" name="buttonSim2" onclick="confirmar2()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>					
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->		
+		
+		<div data-role="content" id="contentMain" name="contentMain">
+		
+			<div id="map" style="padding: 0px"></div>
+			
+			<div style="padding: 1em;">
+				<ul id="grid" data-role="listview" data-filter="true" data-filter-placeholder="Pesquisar..." data-inset="true">		
+				</ul>
+			</div>
+			
+			<div style="padding: 1em">			
+				<label for="convite"><b>Convidar Amigos:</b></label>
+				<input id="convite" name="email_r" maxlength="200" placeholder="Informe um e-mail" type="email" class="ui-bar-c" value=""/>
+				<div width="100%" style="text-align: right;">
+					<input type="button" value="Convidar" data-inline="true" data-theme="a" onclick="convidarAmigo()"/>
+				</div>
+			</div>
+
+			<br/>			
+			
+		</div> <!-- contentMain -->
+</div> <!-- page1 -->
+　
+<!-- Page ends here -->
+</body>
+
+			<!-- Google -->
+			<script>
+			
+	            var posEu;
+	          	var posEle;	  
+	          	var qtdEventosRecentes = 0;
+	          	var directionsService;
+	          	var listPosicoes;
+	          	var usuarioSelecionado;
+	          	var funcaoSelecionada;
+	          	var confirmouLeitura = false;
+			
+				function initMap() {
+			        // Create a map object and specify the DOM element for display.
+			        var map = new google.maps.Map(document.getElementById('map'), {
+			          center: {lat: -19.4343, lng: -42.644},
+			          zoom: 15
+			        });
+			        
+			        var infoWindow = new google.maps.InfoWindow({map: map});
+			        
+			        // Try HTML5 geolocation.
+			        if (navigator.geolocation) {
+			          navigator.geolocation.getCurrentPosition(function(position) {
+			        	  posEu = {
+			              lat: position.coords.latitude,
+			              lng: position.coords.longitude
+			            };
+
+			            infoWindow.setPosition(posEu);
+			            infoWindow.setContent('Você está aqui');
+			            map.setCenter(posEu);
+			            
+			            carregar();
+			            verificarEventosRecentes();
+			            
+			          }, function() {
+			            handleLocationError(true, infoWindow, map.getCenter());
+			          });
+			        } else {
+			          // Browser doesn't support Geolocation
+			          handleLocationError(false, infoWindow, map.getCenter());
+			        }
+			        
+			        
+			        
+			      }
+
+		      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+		        infoWindow.setPosition(pos);
+		        infoWindow.setContent(browserHasGeolocation ?
+		                              'Error: The Geolocation service failed.' :
+		                              'Error: Your browser doesn\'t support geolocation.');
+		      }
+			</script>			
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBliQdYR9WISXU3fR7pTaGFcWCFDegMyog&callback=initMap" async defer></script>
+			
+			<script>
+			
+			// request permission on page load
+			/* document.addEventListener('DOMContentLoaded', function () {
+			  if (!Notification) {
+			    alert('Desktop notifications not available in your browser. Try Chromium.'); 
+			    return;
+			  }
+
+			  if (Notification.permission !== "granted"){
+			    Notification.requestPermission();
+			  }
+			});
+
+			function notifyMe() {
+			  if (Notification.permission !== "granted"){
+			  	Notification.requestPermission();
+			  } else {
+			    var notification = new Notification('OndeCêTá?', {
+			      icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+			      body: "Hey there! You've been notified!",
+			    });
+
+			    notification.onclick = function () {
+			      window.open("http://stackoverflow.com/a/13328397/1269037");      
+			    };
+
+			  }
+
+			} */				
+			
+				$(document).ready(
+						function() {
+							
+							$(".ui-content").css("padding","0em");
+			                //carregar();
+			                //verificarEventosRecentes();
+			                
+							$('#arquivarNegativo').click(
+									function() {
+										confirmarLeitura(2);		
+									});
+
+							$('#arquivarPositivo').click(
+									function() {
+										confirmarLeitura(1);		
+									});	
+
+							$('#aindaNaoVi').click(
+									function() {
+										$('#contentViewEventoRecente').hide();
+									    showMain();
+									    $("#home").panel("open");
+									});				
+
+							$('#contentViewEventoRecente').hide();							
+							
+							/* $("#corpo_").load("template_padrao.html", function(){
+				                $(".ui-content").css("padding","0em");
+				            });
+							
+							$("#menu_").load("template_mapa.html", function(){
+				                $("#page1").page();
+				                $("#corpo_").trigger("create");
+				                $("body").trigger("create");
+				                carregar();
+				                verificarEventosRecentes();
+				                
+								$('#arquivarNegativo').click(
+										function() {
+											confirmarLeitura(2);		
+										});
+
+								$('#arquivarPositivo').click(
+										function() {
+											confirmarLeitura(1);		
+										});	
+
+								$('#aindaNaoVi').click(
+										function() {
+											$('#contentViewEventoRecente').hide();
+										    showMain();
+										    $("#home").panel("open");
+										});				
+
+								$('#contentViewEventoRecente').hide();
+				                
+				            }); */
+						});
+				
+				function calcularRota(posEu, posEle, tipoTransporte, id_usuario, callback){
+	            	directionsService = new google.maps.DirectionsService;
+			        directionsService.route({
+			            origin: posEu,
+			            destination: posEle,
+			            travelMode: obterTipoTransporte(tipoTransporte)
+			          }, function(response, status) {
+			            if (status === 'OK') {
+			            	callback('<font color="#0000ff" size="2px">'+response.routes[0].legs[0].duration.text+' de você... '+obterTipoTransporteFormatado(tipoTransporte)+'</font>',id_usuario);
+			            	//alert(response.routes[0].legs[0].distance.text);
+			            } else {
+			            	callback('<font color="#bbbbbb" size="2px">Não foi possível calcular o tempo... '+obterTipoTransporteFormatado(tipoTransporte)+'</font>',id_usuario);
+			            }
+			          });					
+				}
+				
+				function obterTipoTransporte(id){
+					if(id=='1'){
+						return 'DRIVING';
+					}else if(id=='2'){
+						return 'BICYCLING';
+					}else if(id=='3'){
+						return 'WALKING';
+					}else if(id=='4'){
+						return 'TRANSIT';
+					}else{
+						return 'DRIVING';
+					}
+				}
+				
+				function obterTipoTransporteFormatado(id){
+					if(id=='1'){
+						return '(de carro)';
+					}else if(id=='2'){
+						return '(de bicicleta)';
+					}else if(id=='3'){
+						return '(a pé)';
+					}else if(id=='4'){
+						return '(de ônibus)';
+					}else{
+						return '(de carro)';
+					}
+				}				
+				
+				function carregar() {
+					
+					//notifyMe();
+
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type : 'GET',
+						url : '/apps/public/amigos/'+email_+'/'+iduser_+'/ondeceta',
+						dataType : 'json',
+						success : function(data) {
+							if (data.status == true) {
+								list = data;
+								var posicoes = new Array(list.Amigos.length);
+								$('#grid').empty();
+								for (i = 0; i < list.Amigos.length; i++) {
+									if(list.Amigos[i].situacao != null && list.Amigos[i].situacao == '1'){ // amigos que eu convidei e aceitaram
+										if(list.Amigos[i].lat != null){
+								        	posEle = {
+										    	lat: parseFloat(list.Amigos[i].lat),
+										        lng: parseFloat(list.Amigos[i].lon)
+										    };
+								            if(posEu != null){
+								            	calcularRota(posEu, posEle, list.Amigos[i].tipo_transporte, list.Amigos[i].id_usuario, function(resposta, id){
+								            		$('#posicao_'+id).empty();
+								            		$('#posicao_'+id).append(resposta);
+								            		$('#loader_'+id).empty();
+								            	});
+											}
+											$('#grid').append('<li onclick="confirmarSolicitacaoPosicao('+list.Amigos[i].id_usuario+',\''+list.Amigos[i].email+'\',0);"><a href="#"><table width="100%"><font color="black" size="5px" style="white-space: normal;"><b>' + list.Amigos[i].email + '</b></font><div style="text-align: left" id="loader_'+list.Amigos[i].id_usuario+'"><img src="img/loading-gear.gif" height="15px" style="margin-top: 10px"/></div><div id="posicao_'+list.Amigos[i].id_usuario+'"></table></a></li>');
+										}else{
+											$('#grid').append('<li onclick="confirmarSolicitacaoPosicao('+list.Amigos[i].id_usuario+',\''+list.Amigos[i].email+'\',0);"><a href="#"><table width="100%"><font color="black" size="5px" style="white-space: normal;"><b>' + list.Amigos[i].email + '</b></font><br/><font color="#cccccc" size="2px">Sem localização...</font></table></a></li>');
+										}
+									
+									}else if(list.Amigos[i].situacao != null && list.Amigos[i].situacao == '2'){ // amigos que eu convidei e nao aceitaram
+										$('#grid').append('<li style="background-color: #004D40;text-shadow: none;"><font color="#cccccc" size="5px" style="white-space: normal;"><b>' + list.Amigos[i].email + '</b></font><br/><font color="#cccccc" size="2px">Pedido recusado</font></li>');
+									}else{
+										if(list.Amigos[i].tipo == '1'){ // amigos que eu convidei e ainda nao aceitou ou recusou
+											$('#grid').append('<li onclick="confirmarReevioConvite(\''+list.Amigos[i].email+'\',1)"><a href="#" style="background-color: #dddddd;text-shadow: none;"><font color="gray" size="5px" style="white-space: normal;"><b>' + list.Amigos[i].email + '</b></font><br/><font color="gray" size="2px">Aguardando confirmação...</font></a></li>');
+										}else{ // amigo que me convidou
+											$('#grid').append('<li onclick="confirmarConvite('+list.Amigos[i].id_usuario+',\''+list.Amigos[i].email+'\');"><a href="#" style="background-color: #1E88E5;text-shadow: none;"><font color="white" size="5px" style="white-space: normal;"><b>' + list.Amigos[i].email + '</b></font><br/><font color="white" size="2px">Pedido de amizade</font></a></li>');
+										}
+									}									
+								}
+								
+								$('#grid').listview("refresh");
+								$.mobile.loading("hide");
+	
+							}
+	
+						},
+						error : function() {
+								$.mobile.loading("hide");
+						}
+					});
+				}
+				
+				function confirmarReevioConvite(email, idFuncaoSelecionada){
+					
+					usuarioSelecionado = email;
+					funcaoSelecionada = idFuncaoSelecionada;
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServer_2").empty();
+					$("#msgServer_2").append("Deseja reenviar o convite para "+email+"?");
+
+					showContentDialogConfirmacao2();	
+					
+				}				
+				
+				function confirmarConvite(idUsuarioSolicitado, email){
+					
+					usuarioSelecionado = idUsuarioSolicitado;
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServer_1").empty();
+					$("#msgServer_1").append("Aceitar pedido de amizade de "+email+"?");
+
+					showContentDialogConfirmacao1();	
+					
+				}
+				
+				function confirmar1(){
+					
+					hideContentDialogConfirmacao1();
+					
+					$.mobile.loading("show");
+
+					$.ajax({
+						type: 'POST',
+						data: {"iduser" : iduser_, "idUsuarioSolicitado" : usuarioSelecionado, "confirmacao" : "1", "email" : email_},
+						url: '/apps/public/confirmarAmizade',
+						dataType: 'json',
+						success: function(data){
+							
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServer").empty();
+						    $("#msgServer").append(data);
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog2();
+						    
+						    carregar();
+						    
+						},
+						error: function(data){
+						    
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServerErro").empty();
+						    $("#msgServerErro").append(JSON.parse(data.responseText));
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog();						    
+						    
+						}
+					});	
+					
+				}
+				
+				function recusar1(){
+					
+					hideContentDialogConfirmacao1();
+				
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type: 'POST',
+						data: {"iduser" : iduser_, "idUsuarioSolicitado" : usuarioSelecionado, "confirmacao" : "2", "email" : email_},
+						url: '/apps/public/confirmarAmizade',
+						dataType: 'json',
+						success: function(data){
+							
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServer").empty();
+						    $("#msgServer").append(data);
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog2();
+						    
+							carregar();
+						    
+						},
+						error: function(data){
+						    
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServerErro").empty();
+						    $("#msgServerErro").append(JSON.parse(data.responseText));
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog();						    
+						    
+						}
+					});	
+					
+				}
+				
+				function confirmarSolicitacaoPosicao(idUsuarioSolicitado, email, idFuncaoSelecionada){
+					
+					usuarioSelecionado = idUsuarioSolicitado;
+					funcaoSelecionada = idFuncaoSelecionada;
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServer_2").empty();
+					$("#msgServer_2").append("Deseja saber quanto tempo<br/><br/><b><font color='#0D47A1'>"+email+"</font></b><br/><br/>está de você agora?");
+
+					showContentDialogConfirmacao2();	
+					
+				}
+				
+				function confirmar2(){
+
+					hideContentDialogConfirmacao2();
+					
+					if(funcaoSelecionada == 0){ // solicitar posição
+						
+						solicitarPosicao();	
+					
+					}else if(funcaoSelecionada == 1){ // confirmar reenvio convite
+						
+						$.ajax({
+							type: 'POST',
+							data: {"iduser" : iduser_, "email" : usuarioSelecionado, "emailLogado" : email_},
+							url: '/apps/public/reenviarConvite',
+							dataType: 'json',
+							success: function(data){
+								
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append(data);
+							    
+							    $.mobile.loading("hide");
+							    
+							    showContentDialog2();
+							    
+							    carregar();
+							    
+							},
+							error: function(data){
+							    
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServerErro").empty();
+							    $("#msgServerErro").append(JSON.parse(data.responseText));
+							    
+							    $.mobile.loading("hide");
+							    
+							    showContentDialog();						    
+							    
+							}
+						});							
+					}					
+					
+				}
+				
+				function solicitarPosicao(){
+					
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type: 'POST',
+						data: {"iduser" : iduser_, "idUsuarioSolicitado" : usuarioSelecionado},
+						url: '/apps/public/solicitarPosicao',
+						dataType: 'json',
+						success: function(data){
+							
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServer").empty();
+						    $("#msgServer").append(data);
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog2();
+						    
+						},
+						error: function(data){
+						    
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServerErro").empty();
+						    $("#msgServerErro").append(JSON.parse(data.responseText));
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog();						    
+						    
+						}
+					});					
+					
+				}
+				
+				function verificarEventosRecentes(){
+				    
+				    $.ajax({
+					type: 'GET',
+					url: '/apps/public/eventosRecentes/'+iduser_,
+					dataType: 'json',
+					success: function(data){
+					    if(data.status == true){
+							listEventosRecentes = data;
+
+							if(confirmouLeitura && listEventosRecentes.EventosRecentes.length == 0){
+								$('#eventoRecente').empty();							
+							}
+							
+							for(i=0;i<listEventosRecentes.EventosRecentes.length;i++){
+
+							    if($('#eventoRecente').html().indexOf(("ever_"+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao)) == -1 || confirmouLeitura){
+
+									if(confirmouLeitura){
+										$('#eventoRecente').empty();
+									}
+
+							    	confirmouLeitura = false;
+								    
+									$('#eventoRecente').append('<li style="background-color: #f1f1f1" id="ever_'+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+'">' +
+																	formatarDataHora(listEventosRecentes.EventosRecentes[i].created_at) +
+																	'<br><font color="red" size="5px"><b>' + listEventosRecentes.EventosRecentes[i].email + '</b></font><br>' +
+																	'<table width="100%">' +
+																		//'<tr>' +
+																			//'<td colspan="2" width="50%" align="right"><a onclick="confirmarSolicitacao('+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+','+listEventosRecentes.EventosRecentes[i].id_usuario_solicitante+',2)" data-role="button" data-inline="true">Recusar</a></td>' +
+																			//'<td colspan="2" width="50%" align="left"><a onclick="confirmarSolicitacao('+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+','+listEventosRecentes.EventosRecentes[i].id_usuario_solicitante+',1)" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Enviar</a></td>' +
+																		//'</tr>' +
+																		'<tr>' +
+																			'<td width="50%" style="padding: 10px" align="right"><a href="#" onclick="confirmarSolicitacao('+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+','+listEventosRecentes.EventosRecentes[i].id_usuario_solicitante+',1,1)"><img src="img/transporte_carro.png" width="80px"/></a></td>' +
+																			'<td width="50%" style="padding: 10px" align="left"><a href="#" onclick="confirmarSolicitacao('+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+','+listEventosRecentes.EventosRecentes[i].id_usuario_solicitante+',1,2)"><img src="img/transporte_bike.png" width="80px"/></a></td>' +
+																		'</tr>' +
+																		'<tr>' +
+																			'<td width="50%" style="padding: 10px" align="right"><a href="#" onclick="confirmarSolicitacao('+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+','+listEventosRecentes.EventosRecentes[i].id_usuario_solicitante+',1,3)"><img src="img/transporte_ape.png" width="80px"/></a></td>' +
+																			'<td width="50%" style="padding: 10px" align="left"><a href="#" onclick="confirmarSolicitacao('+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+','+listEventosRecentes.EventosRecentes[i].id_usuario_solicitante+',1,4)"><img src="img/transporte_bus.png" width="80px"/></a></td>' +
+																		'</tr>' +
+																		'<tr>' +
+																			'<td colspan="2" width="100%" align="center"><a onclick="confirmarSolicitacao('+listEventosRecentes.EventosRecentes[i].id_solicitacao_posicao+','+listEventosRecentes.EventosRecentes[i].id_usuario_solicitante+',2)" data-role="button" data-inline="true">Recusar</a></td>' +
+																		'</tr>' +
+																	'</table>' +
+																'</li>');
+									
+									$("body").trigger("create");
+							    }
+							    
+							}
+							
+							$('#eventoRecente').listview("refresh");
+							
+							if(listEventosRecentes.EventosRecentes.length > qtdEventosRecentes /* && !jaAbriuCotacao */){
+							    //$( "#home" ).panel( "open" );
+							    $("#btHome").fadeOut(500);
+							    $("#btHome").buttonMarkup({ theme: "b" });
+							    $("#btHome").fadeIn(500);
+							    $("#btHome").fadeOut(500);
+							    $("#btHome").fadeIn(500);
+							    $("#btHome").fadeOut(500);
+							    $("#btHome").fadeIn(500);
+							    $("#btHome").fadeOut(500);
+							    $("#btHome").fadeIn(500);						    
+							    //jaAbriuCotacao = true;
+							    qtdEventosRecentes = listEventosRecentes.EventosRecentes.length;
+							    
+							    $("#home").panel("open");
+							    
+							}
+							
+							if(listEventosRecentes.EventosRecentes.length == 0){
+							    //$("#btHome").fadeOut(500);
+							    $("#btHome").buttonMarkup({ theme: "a" });
+							    //$("#btHome").fadeIn(500);
+							    qtdEventosRecentes = 0;
+							}
+					    }
+						
+					},
+					error: function(){
+					}
+				});				    
+				    
+				}
+
+				function confirmarSolicitacao(idSolicitacaoPosicao, idSolicitante, situacao, tipoTransporte){
+					
+					if(posEu == null || posEu.lat == null || posEu.lat == ''){
+						alert('Sem GPS...');
+						return;
+					}
+					
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type: 'POST',
+						data: {"iduser" : iduser_, "email" : email_, "idSolicitacaoPosicao" : idSolicitacaoPosicao, "lat" : posEu.lat, "lon" : posEu.lng, "idSolicitante" : idSolicitante, "situacao" : situacao, "tipoTransporte" : tipoTransporte},
+						url: '/apps/public/confirmarSolicitacaoPosicao',
+						dataType: 'json',
+						success: function(data){
+							
+						    if(situacao == 1){
+								hideMain();
+						    	hideContentTransition();
+						    	$("#msgServer").empty();
+						    	$("#msgServer").append(data);
+						    	showContentDialog2();
+						    }
+						    
+						    $.mobile.loading("hide");
+						    confirmouLeitura = true;
+						    qtdEventosRecentes = qtdEventosRecentes - 1;
+							verificarEventosRecentes();
+							$("#home").panel("close");
+						    
+						},
+						error: function(data){
+						    
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServerErro").empty();
+						    $("#msgServerErro").append(JSON.parse(data.responseText));
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog();
+							verificarEventosRecentes();
+							$("#home").panel("close");
+						    
+						}
+						
+					});					
+					
+				}
+				
+				function convidarAmigo(){
+					
+					var err = false;
+					// Hide the Main content
+					hideMain();
+
+					// Reset the previously highlighted form elements
+					inputMapVar.each(function(index) {
+						$(this).prev().removeClass(MISSING);
+					});
+
+					// Perform form validation
+					inputMapVar.each(function(index) {
+						if ($(this).val() == null || $(this).val() == EMPTY) {
+							$(this).prev().addClass(MISSING);
+							err = true;
+						}
+					});
+
+					// If validation fails, show Dialog content
+					if (err == true) {
+						$("#msgServerErro").empty();
+						$("#msgServerErro").append("Por favor, preencha o e-mail.");					
+						showContentDialog();
+						return false;
+					}
+
+					// If validation passes, show Transition content
+					showContentTransition();
+					
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type: 'POST',
+						data: {"iduser" : iduser_, "emailConvidado" : $('#convite').val(), "email" : email_},
+						url: '/apps/public/cadastrarUsuarioConvite',
+						dataType: 'json',
+						success: function(data){
+							
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServer").empty();
+						    $("#msgServer").append(data);
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog2();
+						    
+						    $('#convite').val("");
+						    
+						    carregar();
+						    
+						},
+						error: function(data){
+						    
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServerErro").empty();
+						    $("#msgServerErro").append(JSON.parse(data.responseText));
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog();						    
+						    
+						}
+					});						
+					
+				}
+				
+			</script>
+			
+			<script src="js/jsGeral.js"></script>
+			<script src="js/jsMapa.js"></script> 
+</html>

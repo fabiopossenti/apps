@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+		
+		<!-- script type="text/javascript" src="http://crypto-js.googlecode.com/svn/tags/2.5.4/build/crypto/crypto-min.js"></script-->
+
+        <title>Flanelinha Online</title>        
+        
+        <script>
+			
+			/**************** FORMULARIO *****************/
+
+			// Global declarations - assignments made in $(document).ready() below
+			var hdrMainvar = null;
+			var contentMainVar = null;
+			var ftrMainVar = null;
+			var contentTransitionVar = null;
+			var form1var = null;
+			var confirmationVar = null;
+			var contentDialogVar = null;
+			var contentDialog2Var = null;			
+			var hdrConfirmationVar = null;
+			var contentConfirmationVar = null;
+			var ftrConfirmationVar = null;
+			var inputMapVar = null;
+			// Constants
+			var MISSING = "missing";
+			var EMPTY = "";
+			var NO_STATE = "ZZ";
+
+			var isManterConectado;
+			
+			/**************** FORMULARIO *****************/
+			
+			</script>
+        
+       
+
+    </head>
+	
+	
+	<body>
+	
+	<!-- Page starts here -->
+		<div data-role="page" data-theme="a" id="page1">
+		<div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="false">
+			<h1>Flanelinha Online <br/>Esqueci Minha Senha</h1>
+		</div>
+		<div data-role="content" id="contentMain" name="contentMain">
+		
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+	        
+				<form id="form1">
+					<!-- div id="emailDiv" data-role="fieldcontain"-->
+						<p>
+							<label for="email">E-mail:</label>
+							<input id="email" name="email_r" type="email" class="ui-bar-c" value=""/>
+						</p>
+				
+					<table width="100%">
+						<!-- <tr>
+							<td colspan="2" align="left"><input id="btnLimparTudo" type="button" value="Limpar" data-inline="true" /></td>
+						</tr> -->					
+						<tr>
+							<td style="width: 50%"><input id="btnCancelar" type="button" value="Cancelar" data-inline="true" data-theme="a"/></td>
+							<td style="width: 50%" align="right"><input type="submit" value="Confirmar" data-inline="true" data-theme="b"/></td>
+						</tr>
+					</table>
+					
+					<!-- /div-->
+				</form>
+				
+			</div>
+		</div>
+
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div>Por favor, preencha todos os campos obrigatórios.</div>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div id="msgServer" style="font-size: 20px"></div>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>		
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->
+		
+				
+
+</div> <!-- page1 -->
+　
+<!-- Page ends here -->
+</body>
+
+			<script>
+				$(document).ready(
+					function() {
+						// Assign global variables
+						hdrMainVar = $('#hdrMain');
+						contentMainVar = $('#contentMain');
+						ftrMainVar = $('#ftrMain');
+						contentTransitionVar = $('#contentTransition');
+						form1Var = $('#form1');
+						confirmationVar = $('#confirmation');
+						contentDialogVar = $('#contentDialog');
+						contentDialog2Var = $('#contentDialog2');					
+						hdrConfirmationVar = $('#hdrConfirmation');
+						contentConfirmationVar = $('#contentConfirmation');
+						ftrConfirmationVar = $('#ftrConfirmation');
+						inputMapVar = $('input[name*="_r"]');
+						hideContentDialog();
+						hideContentDialog2();
+						hideContentTransition();
+						hideConfirmation();
+						
+						/* $('#btnLimparTudo').click(
+								function() {
+									$('#email').val("");
+									$('#senha').val("");
+									$('#senhaconf').val("");
+									$('#placa_ltr').val("");
+									$('#btnLimpar').hide();
+						}); */
+						
+					});
+				
+				$('#btnCancelar').click(
+					function(){
+					    $(window).attr('location','login.html?frommenu=1');
+					});			
+				
+				$('#buttonOK').click(
+					function() {
+						hideContentDialog();
+						showMain();
+						return false;
+					});
+				
+				$('#buttonOK2').click(
+					function() {
+						hideContentDialog2();
+						showMain();
+						$(window).attr('location','login.html?frommenu=1');
+						return false;
+					});			
+				
+				$('#form1').submit(
+					function() {
+						var err = false;
+						// Hide the Main content
+						hideMain();
+						
+						// Reset the previously highlighted form elements
+						inputMapVar.each(
+							function(index){
+									$(this).prev().removeClass(MISSING);
+							});
+						
+						// Perform form validation
+						inputMapVar.each(
+							function(index){
+								if($(this).val()==null || $(this).val()==EMPTY){
+									$(this).prev().addClass(MISSING);
+									err = true;
+								}
+							});
+	
+						// If validation fails, show Dialog content
+						if(err == true){
+							showContentDialog();
+							return false;
+						}
+	
+						// If validation passes, show Transition content
+						showContentTransition();
+						
+						//alert($('#placa_ltr').val() + $('#placa_num').val());
+						
+						$.ajax({
+							type: 'POST',
+							data: {"email" : $('#email').val(), "app" : "flanelinhaonline"},
+							url: '/apps/public/esqueciMinhaSenha',
+							dataType: 'json',
+							success: function(data){
+								
+					    		hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append("Foi enviado um e-mail para novo cadastro de senha.");
+							    
+							    showContentDialog2(data);							
+							    
+							},
+							error: function(data){
+							    
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append(formatarMsgErro(data.responseText));
+							    
+							    showContentDialog2(data);						    
+							    
+							}
+						});
+							
+												
+							
+						return false;
+					});
+	
+					function hideMain(){
+						hdrMainVar.hide();
+						contentMainVar.hide();
+						ftrMainVar.hide();
+					}
+	
+					function showMain(){
+						hdrMainVar.show();
+						contentMainVar.show();
+						ftrMainVar.show();
+					}
+	
+					function hideContentTransition(){
+						contentTransitionVar.hide();
+					}
+	
+					function showContentTransition(){
+						contentTransitionVar.show();
+					}
+	
+					function hideContentDialog(){
+						contentDialogVar.hide();
+					}
+	
+					function hideContentDialog2(){
+						contentDialog2Var.hide();
+					}				
+	
+					function showContentDialog(){
+						contentDialogVar.show();
+					}
+					
+					function showContentDialog2(data){
+						contentDialog2Var.show();
+					}
+	
+					function hideConfirmation(){
+						hdrConfirmationVar.hide();
+						contentConfirmationVar.hide();
+						ftrConfirmationVar.hide();
+					}
+	
+					function showConfirmation(){
+						hdrConfirmationVar.show();
+						contentConfirmationVar.show();
+						ftrConfirmationVar.show();
+					}
+			</script> 
+
+</html>

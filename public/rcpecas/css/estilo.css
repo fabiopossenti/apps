@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+
+
+@font-face {
+    font-family: 'LibelSuitRegular';
+    src: url('../fonts/libelsuit-webfont.eot');
+    src: url('../fonts/libelsuit-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/libelsuit-webfont.woff') format('woff'),
+         url('../fonts/libelsuit-webfont.ttf') format('truetype'),
+         url('../fonts/libelsuit-webfont.svg#LibelSuitRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.botao {
+	width: 190px;
+	height: 54px;
+	display:block;
+	background-color: #cac7cc;
+	color: #4a4a4a;
+	font-size: 25px;
+	line-height: 54px;
+	text-align:center;
+	text-transform:uppercase;
+	text-decoration: none;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	background: -moz-linear-gradient(top, #DDDAE0 0%, #C8C6CA 100%); /* firefox */	
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#DDDAE0), color-stop(100%,#C8C6CA)); /* webkit */	
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#DDDAE0', endColorstr='#C8C6CA',GradientType=0 ); /* ie */
+	background: -o-linear-gradient(top, #DDDAE0 0%,#C8C6CA 100%); /* opera */
+    font-family: 'LibelSuitRegular';
+}
+
+
+.botao .luz {
+	width: 190px;
+	height: 25px;
+	display:block;
+	background: #fff;
+	position:absolute;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	opacity:0.25;
+	-moz-opacity: 0.25;
+	filter: alpha(opacity=25);
+}
+
+.botao:hover {
+	-webkit-box-shadow: 0px 0px 2px #8e8e8e;
+	-moz-box-shadow: 0px 0px 2px #8e8e8e;
+	box-shadow: 0px 0px 2px #8e8e8e;
+}
+
+.botao:active {
+	-webkit-box-shadow: inset 0px 0px 5px #8e8e8e;
+	-moz-box-shadow: inset 0px 0px 5px #8e8e8e;
+	box-shadow: inset 0px 0px 5px #8e8e8e; 
+}
+

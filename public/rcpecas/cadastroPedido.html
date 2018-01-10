@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		<script src="js/jquery.maskMoney.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+		
+		<link type="text/css" rel="stylesheet" href="js/jsGrid-1.5.3/jsgrid.min.css" />
+		<link type="text/css" rel="stylesheet" href="js/jsGrid-1.5.3/jsgrid-theme.min.css" />    
+		<script type="text/javascript" src="js/jsGrid-1.5.3/jsgrid.min.js"></script>
+
+        <title>RC PEÇAS e ACESSÓRIOS</title>
+        
+        <style>
+		html, body {
+		  height: 100%;
+		  width: 100%;
+		  margin: 0;
+		  padding: 0;
+		}
+		  
+		.ui-panel-inner {
+			padding: 0px; 
+		}
+			
+		input[type=number]::-webkit-inner-spin-button, 
+		input[type=number]::-webkit-outer-spin-button { 
+			-webkit-appearance: none; 
+			margin: 0; 
+		}
+		
+		.fundo {
+			background-color: #ffffff !important;
+		}
+		
+		.corEsquerdo {
+			background-color: #cfffd5 !important;
+		}			
+		
+		.corDireito {
+			background-color: #d6ddff !important;
+		}	
+		
+		.corPedido {
+			background-color: #ffff94 !important;
+		}						
+		
+		.botao {
+			background-image: url('img/rcpecas/logo.jpg');
+		}	  
+		  
+		</style>
+
+    </head>
+	
+	<body>
+	
+	<!-- Page starts here -->
+		<div data-role="page" data-theme="a" id="page1" style="min-height: auto !important;">
+
+		<div data-role="panel" id="menu" data-position="left" data-display="push" data-dismissible="true" style="background-color: #33B5E5;padding: 0px">
+			<div><img src="img/fundo_menu.png" style="width: 100%; height: 100px"></div>
+			<div><img src="img/user.png" style="margin-left:5px; width: 40px;position: absolute; top: 10px;"></div>
+			<div id="emailUsuario" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 80px;" ></div>			
+			<div style="margin: 5px">
+				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="telaHome()" style="text-align: left;">Home</a>
+				<a data-role="button" data-icon="bullets" data-position-to="window" href="#" onclick="telaProdutos()" style="text-align: left;">Produtos</a>
+				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="telaCadastroUsuario()" style="text-align: left;">Cadastrar Usuário</a>
+				<a data-role="button" data-icon="power" data-position-to="window" href="#" onclick="redirecionarTela(2)" style="text-align: left;">Sair</a>
+			</div>
+		</div>
+		
+		<!-- home -->
+		<div data-role="panel" id="home" data-position="right" data-display="push" data-dismissible="true" data-theme="a" style="background-color: #a50a0c;padding: 0px">
+				<div><img src="img/fundo_eventos.png" style="width: 100%; height: 100px"></div>
+				<div style="margin: 5px">
+					  <div class="ui-corner-all" align="center">
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					  </div>
+					  <br/>
+					  <ul id="eventoRecente" data-inset="true" data-role="listview">
+					  </ul>
+				</div>
+		</div>
+		<!-- home  -->
+		
+		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a" style="background-color: #cccccc">
+			<!-- <img style="margin-left: 50px; margin-top: 5px" src="img/rcpecas/logo.jpg"> -->
+			<p align="center"><font size="20px">RC PEÇAS e ACESSÓRIOS</font></p>
+			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
+			<!-- <a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a> -->			
+		</div>
+		
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>RC Peças</h1>
+			</div>
+			<br/>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>RC Peças</h1>
+			</div>
+			<br/>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacaoExclusao" name="contentDialogConfirmacaoExclusao">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>RC Peças</h1>
+			</div>
+			<br/>		
+			<div id="msgServer2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="50%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmarExclusao()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao1" name="contentDialogConfirmacao1">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>RC Peças</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_1" style="font-size: 20px"></div>
+				<table width="0%" style="padding: 10px">
+					<tr>
+						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="33%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" onclick="recusar1()" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="33%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmar1()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>		
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao2" name="contentDialogConfirmacao2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>RC Peças</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="50%" align="left"><a id="buttonSim2" name="buttonSim2" onclick="confirmar2()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>					
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->				
+
+		<div data-role="content" id="contentMain" name="contentMain">
+		
+			<div id="jsGrid"></div>
+			
+			<br/>
+			
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;background-color: #dddddd">
+			
+				<font size="5px">*** PEDIDO ***</font>
+				
+				<div style="margin-top: 10px" id="jsGridPedido"></div>
+				
+				<table width="100%">
+					<tr>
+						<td id="btnNovoPedido" style="width: 50%"><input onclick="novoPedido()" type="button" value="Novo Pedido" data-inline="true" data-theme="a"/></td>
+						<td id="btnConfirmar" style="width: 50%" align="right"><input onclick="confirmarPedido()" type="submit" value="Confirmar Pedido" data-inline="true" data-theme="b"/></td>
+					</tr>
+				</table>
+				
+				<table id="resumo" style="display: none">
+					<tr>
+						<td>Total Esquerdo:</td>
+						<td><div id="totalEsquerdo"></div></td>
+					</tr>
+					<tr>
+						<td>Total Direito:</td>
+						<td><div id="totalDireito"></div></td>
+					</tr>
+					<tr>
+						<td><b>Total Itens:</b></td>
+						<td><b><div id="totalItens"></div></b></td>
+					</tr>
+					<tr>
+						<td><b>Total:</b></td>
+						<td><b><div id="totalValor"></div></b></td>
+					</tr>					
+				</table>
+				
+				<div style="margin-top: 10px" id="jsGridPedidos"></div>
+				
+			</div>
+
+		</div>
+
+</div> <!-- page1 -->
+　
+<!-- Page ends here -->
+</body>
+
+			<script>
+				
+				//var itensPedido = [{ "descricao": "", "codigo": "", "qtd_esquerdo": "", "qtd_direito": "", "vlr_venda": "" }];
+				var itensPedido;
+				var itens = new Array();
+				var resumoQtdEsquerdo = 0;
+				var resumoQtdDireito = 0;
+				var resumoQtdItens = 0;
+				var resumoTotal = 0;
+				
+				function telaHome(){
+					$(window).attr('location','cadastroPedido.html');
+				}
+				
+				function telaProdutos(){
+					$(window).attr('location','cadastroProduto.html');
+				}
+
+				function telaCadastroUsuario(){
+					$(window).attr('location','cadastro.html');
+				}
+			
+				$(document).ready(
+						function() {
+							
+							var navigation = window.localStorage.getItem("herbiee_navigation");
+							if(navigation != null){
+							    var s = navigation;
+							    iduser_ = s.substr(0,s.indexOf(';;;;'));
+							    email_ = s.substr(s.indexOf(';;;;')+4,s.lentgh);
+							}
+							
+							if(iduser_ == null || email_ == null){
+								$(window).attr('location','login.html');
+							}
+							
+							$(".ui-content").css("padding","0em");
+			                
+							$('#arquivarNegativo').click(
+									function() {
+										confirmarLeitura(2);		
+									});
+
+							$('#arquivarPositivo').click(
+									function() {
+										confirmarLeitura(1);		
+									});	
+
+							$('#aindaNaoVi').click(
+									function() {
+										$('#contentViewEventoRecente').hide();
+									    showMain();
+									    $("#home").panel("open");
+									});				
+
+							$('#contentViewEventoRecente').hide();	
+							
+							$("#btnNovoPedido").hide();
+							
+							carregar();
+							
+							criarGridPedido();	
+							
+							carregarPedidos();
+						});
+			
+				function criarGridPedido(){
+					$("#jsGridPedido").jsGrid({
+				        width: "100%",
+				        height: "auto",
+				 
+				        filtering: false,
+				        inserting: false,
+				        editing: false,
+				        sorting: false,
+				        paging: false,
+				        autoload: false,				        
+				 
+				        noDataContent: "Nenhum item de pedido adicionado...",
+		        		deleteConfirm: "Tem certeza que deseja excluir?",								
+				        
+				        data: itensPedido,
+        
+				        pagePrevText: "<<",
+				        pageNextText: ">>",
+				        pageFirstText: "<<<<",
+				        pageLastText: ">>>>",
+				        
+				        onItemDeleted: function(args) {
+							for(i=0;i<itens.length;i++){						
+								if(itens[i].id_produto == args.item.id_produto){
+									
+									itens.splice(args.itemIndex, 1);
+									preencherValores();
+									$('.moedaReal').maskMoney();
+									
+									calcularResumo();
+									
+									break;
+								}
+							}
+							if(itens.length == 0){
+								$("#btnConfirmar").hide();
+								$("#btnNovoPedido").hide();
+								resetarResumo();
+								$("#page1").attr("style","background-color: white");
+							}
+				        },
+				 
+				        fields: [
+				            { name: "qtd_esquerdo", title: "Qtd. Esquerdo", type: "text", css: "corEsquerdo" },
+				            { name: "qtd_direito", title: "Qtd. Direito", type: "text", css: "corDireito" },
+				            { name: "descricao", title: "Descrição", type: "text", width: 300, css: "corPedido" },
+				            { name: "codigo", title: "Código", type: "text", css: "corPedido" },
+				            { name: "vlr_venda", title: "Valor Venda", type: "text", width: 140, css: "corPedido" } ,
+				            { type: "control", editButton: false, deleteButton: true, css: "corPedido" } 
+				        ]
+				    });					
+				}
+				
+				function resetar(){
+					$('#formulario').css('background-color','#B2DFDB');
+					$('#btnConfirmar').hide();
+					$('#btnNovoPedido').hide();
+					$('#btnExcluir').hide();
+					$('#btnCancelar').hide();
+					$('#btnCadastrar').show();
+					$('#btnVoltar').show();
+					$('#id').val(null);
+					$("#codigo").val('');
+					$("#descricao").val('');
+					$("#qtdEstoqueE").val('');
+					$("#qtdEstoqueD").val('');
+					$("#qtdMinimaAlerta").val('');
+					$("#vlrCusto").val('');
+					$("#vlrVenda").val('');
+					$("#file").val('');
+					$("#flexcluir").val(null);
+					$("#midia").empty();
+				}
+
+				$('#form1').submit(function() {
+					
+					if(isArquivoGrande){
+						hideMain();
+
+						hideContentTransition();
+
+						$("#msgServerErro").empty();
+						$("#msgServerErro").append("Tamanho máximo de bytes excedido do arquivo. Tamanho máximo: 1MB.");
+						
+						showContentDialog();
+						
+						return false;
+					}
+					
+					var err = false;
+					// Hide the Main content
+					hideMain();
+
+					// Reset the previously highlighted form elements
+					inputMapVar.each(function(index) {
+						$(this).prev().removeClass(MISSING);
+					});
+
+					// Perform form validation
+					inputMapVar.each(function(index) {
+						if ($(this).val() == null || $(this).val() == EMPTY) {
+							$(this).prev().addClass(MISSING);
+							err = true;
+						}
+					});
+
+					// If validation fails, show Dialog content
+					if (err == true) {
+						$("#msgServerErro").empty();
+						$("#msgServerErro").append("Por favor, preencha todos os campos obrigatórios.");
+						showContentDialog();
+						return false;
+					}
+
+					// If validation passes, show Transition content
+					showContentTransition();
+
+					var form = document.getElementById('form1');
+					var request = new XMLHttpRequest();
+
+					//e.preventDefault();
+					var formdata = new FormData(form);
+
+					request.open('post', 'cadastrarProduto');
+					//request.addEventListener('load', transferComplete, false);
+					request.onreadystatechange = function (aEvt) {
+						  if (request.readyState == 4) {
+						  	if(request.status == 200)
+						  		transferComplete(request.responseText);
+						    else
+						    	transferFailed(request.responseText);
+						  }
+						};					
+					request.send(formdata);
+
+					return false;
+				});
+				
+				$('#file').bind('change', function() {
+					
+					try{
+						if(this.files[0].size > 1000000){
+							isArquivoGrande = true;
+						}else{
+							isArquivoGrande = false;
+						}
+					}catch(e){
+						
+					}
+
+				});				
+
+				function transferComplete(data) {
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServer").empty();
+					$("#msgServer").append(JSON.parse(data));
+
+					showContentDialog2();
+					
+					if($('#id').val() == null || $('#id').val() == ''){
+						$('input[data-type="search"]').val('');
+					}
+					
+					resetar();
+					
+					carregar();
+					
+					$(".ui-input-search input").attr('data-lastval', '').trigger("change");
+					
+				}
+				
+				function transferFailed(data) {
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServerErro").empty();
+					$("#msgServerErro").append("Falha ao enviar o arquivo.<br/><br/>");
+					$("#msgServerErro").append(JSON.parse(data));
+
+					showContentDialog();
+					
+				}
+
+				function carregar() {
+
+					$.mobile.loading("show");
+					
+					db = {
+						    loadData: function(filter) {
+						        var d = $.Deferred();
+
+						        // server-side filtering
+						        $.ajax({
+						            type: "GET",
+						            url: "/apps/public/obterProduto/"+email_+"/"+iduser_+"/rcpecas",
+						            data: filter,
+						            dataType: "json"
+						        }).done(function(result) {
+						            // client-side filtering						            
+						            result = $.grep(result.Produto, function(item) {
+						            	//item.vlr_custo = item.vlr_custo.replace('.',',');
+						            	//item.vlr_venda = item.vlr_venda.replace('.',',');
+						            	//item.vlr_custo = milhar(item.vlr_custo.substr(0,item.vlr_custo.indexOf(','))) + item.vlr_custo.substr(item.vlr_custo.indexOf(','),item.vlr_custo.length);
+						            	//item.vlr_venda = milhar(item.vlr_venda.substr(0,item.vlr_venda.indexOf(','))) + item.vlr_venda.substr(item.vlr_venda.indexOf(','),item.vlr_venda.length);
+						            	
+						            	if(filter.descricao == '' && filter.codigo == ''){
+						            		return true;
+						            	}else{
+						            		
+						            		if(filter.descricao != '' && filter.codigo != ''){
+						            			return item.descricao.toUpperCase().indexOf(filter.descricao.toUpperCase()) != -1 &&
+						            						item.codigo.toUpperCase() == filter.codigo.toUpperCase();
+						            		}else if(filter.descricao != ''){
+						            			return item.descricao.toUpperCase().indexOf(filter.descricao.toUpperCase()) != -1;
+						            		}else if(filter.codigo != ''){
+						            			return item.codigo.toUpperCase() == filter.codigo.toUpperCase();
+						            		}
+						            		
+						            	}
+						            	
+						            });
+
+						            d.resolve(result);
+						        })
+
+						        return d.promise();						    	
+						    	
+						        /* return $.ajax({
+						            type: "GET",
+						            url: "/apps/public/obterProduto",
+						            data: filter
+						        }); */
+						    },
+						    
+						    insertItem: function(item) {
+						        return $.ajax({
+						            type: "POST",
+						            url: "/items",
+						            data: item
+						        });
+						    },
+						    
+						    updateItem: function(item) {
+						        return $.ajax({
+						            type: "PUT",
+						            url: "/items",
+						            data: item
+						        });
+						    },
+						    
+						    deleteItem: function(item) {
+						        return $.ajax({
+						            type: "DELETE",
+						            url: "/items",
+						            data: item
+						        });
+						    },
+						}
+					
+					$("#jsGrid").jsGrid({
+				        width: "100%",
+				        height: "auto",
+				 
+				        filtering: true,
+				        inserting: false,
+				        editing: false,
+				        sorting: true,
+				        paging: true,
+				        autoload: true,				        
+				        
+				        pageSize: 3,
+				        pageButtonCount: 5,
+				 
+				        //deleteConfirm: "Do you really want to delete the client?",
+				        		
+				        noDataContent: "Nenhum produto encontrado",
+				        
+				        pagePrevText: "<<",
+				        pageNextText: ">>",
+				        pageFirstText: "<<<<",
+				        pageLastText: ">>>>",
+				        
+				        loadMessage: "Buscando dados...",
+				 
+				        controller: db,
+				        
+				        //data: list.Produto,
+				 
+				        fields: [
+				            { name: "qtd_estoque_esquerdo", title: "Qtd. Esquerdo", type: "number", filtering: false, align: "right", css: "corEsquerdo",
+				            	itemTemplate: function(value, item) {
+				                    var $result = jsGrid.fields.control.prototype.itemTemplate.apply(this, arguments);
+				                    
+				                    var $customButton = $("<table width='100%' align='left'><tr><td></td><td width='100%' align='rigth'>"+item.qtd_estoque_esquerdo+"</td></tr></table>")
+				                    	.click(function(e) {
+				                    		incluirItemPedido(item.id_produto, item.codigo, item.descricao, item.qtd_estoque_esquerdo, item.qtd_estoque_direito, item.qtd_minima_alerta, item.vlr_custo, item.vlr_venda, item.caminho_midia, false, true);
+				                            //e.stopPropagation();
+				                        });
+				                    
+				                    $customButton.css("background-image","url('img/rcpecas/setadown.png')");
+				                    $customButton.css("background-repeat","no-repeat");									
+				                    //$customButton.width("45px");
+				                    $customButton.height("45px");
+				                    
+				                    return $result.add($customButton);
+				                }  
+							},
+				            { name: "qtd_estoque_direito", title: "Qtd. Direito", type: "number", filtering: false, align: "right", css: "corDireito",
+				            	itemTemplate: function(value, item) {
+				                    var $result = jsGrid.fields.control.prototype.itemTemplate.apply(this, arguments);
+				                    
+				                    var $customButton = $("<table width='100%' align='left'><tr><td></td><td width='100%' align='rigth'>"+item.qtd_estoque_direito+"</td></tr></table>")
+				                    	.click(function(e) {
+				                    		incluirItemPedido(item.id_produto, item.codigo, item.descricao, item.qtd_estoque_esquerdo, 1, item.qtd_minima_alerta, item.vlr_custo, item.vlr_venda, item.caminho_midia, false, false);
+				                            //e.stopPropagation();
+				                        });
+				                    
+				                    $customButton.css("background-image","url('img/rcpecas/setadown.png')");
+				                    $customButton.css("background-repeat","no-repeat");									
+				                    //$customButton.width("45px");
+				                    $customButton.height("45px");
+				                    
+				                    return $result.add($customButton);
+				                } },
+				            { name: "descricao", title: "Descrição", type: "text", width: 300 },
+				            { name: "codigo", title: "Código", type: "text" },
+				            /* { name: "qtd_minima_alerta", title: "Qtd. Alerta", type: "text", filtering: false }, */
+				            /* { name: "vlr_custo", title: "Valor Custo", type: "text", filtering: false }, */
+				            { name: "vlr_venda", title: "Valor Venda", type: "number", filtering: false, align: "right" } 
+				        ]
+				    });	
+					
+					$.mobile.loading("hide");
+					
+				}
+				
+				function incluirItemPedido(id_produto, codigo, descricao, qtd_esquerdo, qtd_direito, qtd_minima_alerta, vlr_custo, vlr_venda, caminho_midia, isFromPedido, isEsquerdo){
+				
+						for(i=0;i<itens.length;i++){						
+
+							if(itens[i].id_produto == id_produto){
+							
+								if(isEsquerdo){
+									itens[i].qtd_esquerdo_ = parseInt($("#qtd_esquerdo_"+id_produto).val()) + 1;
+									$("#qtd_esquerdo_"+id_produto).val(itens[i].qtd_esquerdo_);
+									$("#qtd_esquerdo_"+id_produto).focus();
+									$("#qtd_esquerdo_"+id_produto).select();									
+								}else{
+									itens[i].qtd_direito_ = parseInt($("#qtd_direito_"+id_produto).val()) + 1;
+									$("#qtd_direito_"+id_produto).val(itens[i].qtd_direito_);
+									$("#qtd_direito_"+id_produto).focus();
+									$("#qtd_direito_"+id_produto).select();																		
+								}
+								
+								calcularResumo();							
+
+								return;
+							}
+						}				
+					
+						var obj = new Object();
+						obj.descricao = descricao;
+						obj.codigo = codigo;
+						if(isFromPedido){							
+							obj.qtd_esquerdo = '<table align="center"><tr><td rowspan="2" align="center" style="vertical-align:middle"><input maxlength="10" onchange="registrarItem('+id_produto+')" id="qtd_esquerdo_'+id_produto+'" type="number" value="'+qtd_esquerdo+'" style="width: 50px" step="1"/></td><td align="center" style="vertical-align:bottom;"><img onclick="controlarCampoNumerico(\'qtd_esquerdo_'+id_produto+'\', true, '+id_produto+')" src="img/rcpecas/setaup.png" width="20px"/></td></tr><tr><td align="center" style="vertical-align:top"><img onclick="controlarCampoNumerico(\'qtd_esquerdo_'+id_produto+'\', false, '+id_produto+')" src="img/rcpecas/setadown.png" width="20px"/></td></tr></table>';
+							obj.qtd_direito = '<table align="center"><tr><td rowspan="2" align="center" style="vertical-align:middle"><input maxlength="10" onchange="registrarItem('+id_produto+')" id="qtd_direito_'+id_produto+'" type="number" value="'+qtd_direito+'" style="width: 50px" step="1"/></td><td align="center" style="vertical-align:bottom;"><img onclick="controlarCampoNumerico(\'qtd_direito_'+id_produto+'\', true, '+id_produto+')" src="img/rcpecas/setaup.png" width="20px"/></td></tr><tr><td align="center" style="vertical-align:top"><img onclick="controlarCampoNumerico(\'qtd_direito_'+id_produto+'\', false, '+id_produto+')" src="img/rcpecas/setadown.png" width="20px"/></td></tr></table>';
+							obj.qtd_esquerdo_ = qtd_esquerdo;
+							obj.qtd_direito_ = qtd_direito;							
+						}else{
+							obj.qtd_esquerdo = '<table align="center"><tr><td rowspan="2" align="center" style="vertical-align:middle"><input maxlength="10" onchange="registrarItem('+id_produto+')" id="qtd_esquerdo_'+id_produto+'" type="number" value="0" style="width: 50px" step="1"/></td><td align="center" style="vertical-align:bottom;"><img onclick="controlarCampoNumerico(\'qtd_esquerdo_'+id_produto+'\', true, '+id_produto+')" src="img/rcpecas/setaup.png" width="20px"/></td></tr><tr><td align="center" style="vertical-align:top"><img onclick="controlarCampoNumerico(\'qtd_esquerdo_'+id_produto+'\', false, '+id_produto+')" src="img/rcpecas/setadown.png" width="20px"/></td></tr></table>';
+							obj.qtd_direito = '<table align="center"><tr><td rowspan="2" align="center" style="vertical-align:middle"><input maxlength="10" onchange="registrarItem('+id_produto+')" id="qtd_direito_'+id_produto+'" type="number" value="0" style="width: 50px" step="1"/></td><td align="center" style="vertical-align:bottom;"><img onclick="controlarCampoNumerico(\'qtd_direito_'+id_produto+'\', true, '+id_produto+')" src="img/rcpecas/setaup.png" width="20px"/></td></tr><tr><td align="center" style="vertical-align:top"><img onclick="controlarCampoNumerico(\'qtd_direito_'+id_produto+'\', false, '+id_produto+')" src="img/rcpecas/setadown.png" width="20px"/></td></tr></table>';
+
+							if(isEsquerdo){
+								obj.qtd_esquerdo_ = 1;
+								obj.qtd_direito_ = 0;
+							}else{
+								obj.qtd_esquerdo_ = 0;
+								obj.qtd_direito_ = 1;						
+							}						
+							
+						}
+						obj.vlr_venda = '<table align="center"><tr><td><input maxlength="12" onchange="registrarItem('+id_produto+')" id="vlr_venda_'+id_produto+'" class="moedaReal" type="text" value="'+vlr_venda+'" data-thousands="." data-decimal="," style="width: 120px"/></td></tr></table>';
+						obj.vlr_venda_ = vlr_venda.replace('.',',');
+						obj.id_produto = id_produto;
+						
+						itens.push(obj);
+						//alert(itens.length);
+						$("#jsGridPedido").jsGrid("insertItem", obj);
+						preencherValores();
+						
+						$('.moedaReal').maskMoney();
+
+						if(isEsquerdo){
+							$("#vlr_venda_"+id_produto).focus();
+							$("#qtd_esquerdo_"+id_produto).focus();
+							$("#qtd_esquerdo_"+id_produto).select();
+						}else{
+							$("#vlr_venda_"+id_produto).focus();
+							$("#qtd_direito_"+id_produto).focus();
+							$("#qtd_direito_"+id_produto).select();						
+						}
+												
+						$("#btnConfirmar").show();
+						$("#btnNovoPedido").show();
+						$("#page1").attr("style","background-color: yellow");
+						
+						calcularResumo();
+						
+						$('#resumo').show();
+						
+		                //$("body").trigger("create");
+		                //$("#jsGrid").jsGrid("refresh");
+					
+				}
+				
+				function registrarItem(idProduto){
+						for(i=0;i<itens.length;i++){						
+
+							if(itens[i].id_produto == idProduto){
+
+								itens[i].qtd_esquerdo_ = $("#qtd_esquerdo_"+idProduto).val();
+								itens[i].qtd_direito_ = $("#qtd_direito_"+idProduto).val();
+								itens[i].vlr_venda_ = $("#vlr_venda_"+idProduto).val();
+								
+								calcularResumo();
+								
+								break;
+								
+							}
+						}					
+				}
+				
+				function preencherValores(){
+				
+						for(i=0;i<itens.length;i++){
+							
+								 $("#qtd_esquerdo_"+itens[i].id_produto).val(itens[i].qtd_esquerdo_);
+								 $("#qtd_direito_"+itens[i].id_produto).val(itens[i].qtd_direito_);
+								 $("#vlr_venda_"+itens[i].id_produto).val(itens[i].vlr_venda_);
+						}
+
+				}
+				
+				function calcularResumo(){
+					
+					resumoQtdEsquerdo = 0;
+					resumoQtdDireito = 0;
+					resumoQtdItens = 0;
+					resumoTotal = 0;
+					
+					for(i=0;i<itens.length;i++){						
+
+						 resumoQtdEsquerdo += parseInt(itens[i].qtd_esquerdo_);
+						 resumoQtdDireito += parseInt(itens[i].qtd_direito_);
+						 resumoQtdItens += parseInt(itens[i].qtd_esquerdo_) + parseInt(itens[i].qtd_direito_);
+						 if(itens[i].vlr_venda_ != ''){
+						 	resumoTotal += parseFloat(itens[i].vlr_venda_.replace('.','').replace(',','.'))*(parseInt(itens[i].qtd_esquerdo_) + parseInt(itens[i].qtd_direito_));
+						 }
+							
+					}
+					
+					$("#totalEsquerdo").empty();
+					$("#totalDireito").empty();
+					$("#totalItens").empty();
+					$("#totalValor").empty();
+					$("#totalEsquerdo").append(resumoQtdEsquerdo);
+					$("#totalDireito").append(resumoQtdDireito);
+					$("#totalItens").append(resumoQtdItens);
+					
+					var vlr = (""+resumoTotal).replace('.',',');
+					if(vlr.indexOf(',') == -1){
+						vlr += ",00";
+					}else{
+						vlr = vlr.substr(0,vlr.indexOf(',')+3);
+						if(vlr.length - vlr.indexOf(',') == 2){
+							vlr += "0";
+						}
+					}
+					vlr = milhar(vlr.substr(0,vlr.indexOf(','))) + vlr.substr(vlr.indexOf(','),vlr.length);
+					
+					$("#totalValor").append("R$ " + vlr);
+					
+				}
+				
+				function resetarResumo(){
+					$("#resumo").hide();
+					$("#totalEsquerdo").empty();
+					$("#totalDireito").empty();
+					$("#totalItens").empty();
+					$("#totalValor").empty();
+					resumoQtdEsquerdo = 0;
+					resumoQtdDireito = 0;
+					resumoQtdItens = 0;
+					resumoTotal = 0;					
+				}
+				
+				function controlarCampoNumerico(id, up, idProduto){
+					if(up){
+						
+						$("#"+id).val(parseInt($("#"+id).val())+1);							
+						
+						registrarItem(idProduto);
+						
+					}else{
+
+						$("#"+id).val(parseInt($("#"+id).val())-1);
+						
+						registrarItem(idProduto);					
+						
+					}
+				}
+				
+				function novoPedido(){
+					
+					if(itens.length > 0){
+						hideMain();
+
+						hideContentTransition();
+
+						$("#msgServer2").empty();
+						$("#msgServer2").append("Tem certeza que deseja descartar o pedido atual?");
+						
+						showContentDialogConfirmacaoExclusao();						
+					}
+
+				}
+				
+				function confirmarExclusao(){
+					itens = new Array();
+					$("#jsGridPedido").jsGrid("destroy");
+					criarGridPedido();
+					$("#btnConfirmar").hide();
+					$("#btnNovoPedido").hide();
+					
+					resetarResumo();
+					$("#page1").attr("style","background-color: white");
+					
+					hideContentDialogConfirmacaoExclusao();
+					showMain();
+					resetar();
+				}
+				
+				function confirmarPedido(){
+
+					$.ajax({
+						type: 'POST',
+						data: {"iduser" : iduser_,"itens" : itens, "email" : email_, "app" : "rcpecas"},
+						url: '/apps/public/cadastrarNovoPedido',
+						dataType: 'json',
+						success: function(data){
+							
+							hideMain();
+
+							hideContentTransition();
+
+							$("#msgServer").empty();
+							$("#msgServer").append(data);
+							
+							itens = new Array();
+							$("#jsGridPedido").jsGrid("destroy");
+							criarGridPedido();
+							$("#btnConfirmar").hide();
+							$("#btnNovoPedido").hide();
+							
+							resetarResumo();
+							
+							$("#page1").attr("style","background-color: white");
+							
+							carregar();
+							
+							carregarPedidos();
+
+							showContentDialog2();
+							
+						},
+						error: function(data){
+							
+							hideMain();
+
+							hideContentTransition();
+
+							$("#msgServerErro").empty();
+							$("#msgServerErro").append(JSON.parse(data));
+
+							showContentDialog();
+						    
+						}
+					});				
+					
+				}
+				
+				function carregarPedidos() {
+
+					$.mobile.loading("show");
+					
+					db = {
+						    loadData: function(filter) {
+						        var d = $.Deferred();
+
+						        // server-side filtering
+						        $.ajax({
+						            type: "GET",
+						            url: "/apps/public/obterPedido/"+email_+"/"+iduser_+"/rcpecas",
+						            data: filter,
+						            dataType: "json"
+						        }).done(function(result) {
+						            // client-side filtering						            
+						            result = $.grep(result.Pedido, function(item) {
+            							return true;
+						            });
+
+						            d.resolve(result);
+						        })
+
+						        return d.promise();						    	
+						    	
+						        /* return $.ajax({
+						            type: "GET",
+						            url: "/apps/public/obterProduto",
+						            data: filter
+						        }); */
+						    },
+						    
+						    insertItem: function(item) {
+						        return $.ajax({
+						            type: "POST",
+						            url: "/items",
+						            data: item
+						        });
+						    },
+						    
+						    updateItem: function(item) {
+						        return $.ajax({
+						            type: "PUT",
+						            url: "/items",
+						            data: item
+						        });
+						    },
+						    
+						    deleteItem: function(item) {
+						        return $.ajax({
+						            type: "DELETE",
+						            url: "/items",
+						            data: item
+						        });
+						    },
+						}
+					
+					$("#jsGridPedidos").jsGrid({
+				        width: "100%",
+				        height: "auto",
+				 
+				        filtering: false,
+				        inserting: false,
+				        editing: false,
+				        sorting: true,
+				        paging: true,
+				        autoload: true,				        
+				        
+				        pageSize: 5,
+				        pageButtonCount: 5,
+				 
+				        //deleteConfirm: "Do you really want to delete the client?",
+				        		
+				        noDataContent: "Nenhum pedido encontrado",
+				        
+				        pagePrevText: "<<",
+				        pageNextText: ">>",
+				        pageFirstText: "<<<<",
+				        pageLastText: ">>>>",
+				        
+				        loadMessage: "Buscando dados...",
+				 
+				        controller: db,
+				        
+						rowClick: function(args) {
+							
+							if(confirm("Deseja aproveitar este pedido como um novo pedido? O pedido atual será descartado.")){	
+								itens = new Array();
+								$("#jsGridPedido").jsGrid("destroy");
+								criarGridPedido();
+								$("#btnConfirmar").hide();
+								$("#btnNovoPedido").hide();								
+								resetarResumo();
+								$("#page1").attr("style","background-color: yellow");
+								for(j=0;j<args.item.itens_.length;j++){
+									incluirItemPedido(args.item.itens_[j].id_produto, args.item.itens_[j].codigo, args.item.itens_[j].descricao, args.item.itens_[j].qtd_esquerdo, args.item.itens_[j].qtd_direito, null, null, args.item.itens_[j].vlr_venda, null, true, true);
+								}
+							}
+							
+						},	
+				        
+				        fields: [
+				            { name: "updated_at", title: "Data", type: "text" },
+				            { name: "qtdItens", title: "Qtd. Itens", type: "number" },
+				            { name: "vlrTotal", title: "Total", type: "number" },
+				            { name: "itens", title: "Itens", type: "text", width: 400, sorting: false } 
+				        ]
+				    });	
+					
+					$.mobile.loading("hide");
+					
+				}
+				
+			</script>
+			
+			<script src="js/jsGeral.js"></script>
+			<script src="js/jsCadastros.js"></script>			
+
+</html>
+t

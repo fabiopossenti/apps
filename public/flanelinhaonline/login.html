@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<meta name="google-signin-clientid" content="809716240036-lkcen4dvbf0djj5i2jl6pake2hb0ffnd.apps.googleusercontent.com" />
+		<meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email" />
+		<meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
+		<meta name="google-signin-cookiepolicy" content="single_host_origin" />				
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+		
+        <!-- <script type="text/javascript" src="cordova.js"></script> -->
+        
+        
+        <!-- <script type="text/javascript" src="phonegap.js"></script> -->
+        <!-- <script type="text/javascript" src="js/index.js"></script> -->
+        <script type="text/javascript">
+            /* app.initialize(); */
+        </script>
+        
+        <script type="text/javascript" src="openfb.js"></script>
+		
+		<!-- script src="androidpreferences.js"></script-->
+		
+		<!-- script type="text/javascript" src="http://crypto-js.googlecode.com/svn/tags/2.5.4/build/crypto/crypto-min.js"></script-->
+		
+		<script src="https://apis.google.com/js/client:platform.js" async defer></script>
+		        
+        <title>Flanelinha Online</title>
+        
+      
+        
+		<script>
+		  // This is called with the results from from FB.getLoginStatus().
+		  /* function statusChangeCallback(response) {
+		    console.log('statusChangeCallback');
+		    console.log(response);
+		    // The response object is returned with a status field that lets the
+		    // app know the current login status of the person.
+		    // Full docs on the response object can be found in the documentation
+		    // for FB.getLoginStatus().
+		    if (response.status === 'connected') {
+		      // Logged into your app and Facebook.
+		      testAPI();		      
+	
+		    } else if (response.status === 'not_authorized') {
+		      // The person is logged into Facebook, but not your app.
+		      document.getElementById('status').innerHTML = 'Please log ' +
+		        'into this app.';
+		    } else {
+		      // The person is not logged into Facebook, so we're not sure if
+		      // they are logged into this app or not.
+		      document.getElementById('status').innerHTML = 'Please log ' +
+		        'into Facebook.';
+		    }
+		  }
+		
+		  // This function is called when someone finishes with the Login
+		  // Button.  See the onlogin handler attached to it in the sample
+		  // code below.
+		  function checkLoginState() {
+		    FB.getLoginStatus(function(response) {
+		      statusChangeCallback(response);
+		    });
+		  }
+		
+		  window.fbAsyncInit = function() {
+		  FB.init({
+		    appId      : '324331947773033',
+		    cookie     : true,  // enable cookies to allow the server to access 
+		                        // the session
+		    xfbml      : true,  // parse social plugins on this page
+		    version    : 'v2.1' // use version 2.1
+		  });
+		
+		  // Now that we've initialized the JavaScript SDK, we call 
+		  // FB.getLoginStatus().  This function gets the state of the
+		  // person visiting this page and can return one of three states to
+		  // the callback you provide.  They can be:
+		  //
+		  // 1. Logged into your app ('connected')
+		  // 2. Logged into Facebook, but not your app ('not_authorized')
+		  // 3. Not logged into Facebook and can't tell if they are logged into
+		  //    your app or not.
+		  //
+		  // These three cases are handled in the callback function.
+		
+		  FB.getLoginStatus(function(response) {
+		    statusChangeCallback(response);
+		  });
+		
+		  };
+		
+		  // Load the SDK asynchronously
+		  (function(d, s, id) {
+		    var js, fjs = d.getElementsByTagName(s)[0];
+		    if (d.getElementById(id)) return;
+		    js = d.createElement(s); js.id = id;
+		    js.src = "//connect.facebook.net/en_US/sdk.js";
+		    fjs.parentNode.insertBefore(js, fjs);
+		  }(document, 'script', 'facebook-jssdk'));
+		
+		  // Here we run a very simple test of the Graph API after login is
+		  // successful.  See statusChangeCallback() for when this call is made.
+		  function testAPI() {
+		    console.log('Welcome!  Fetching your information.... ');
+		    FB.api('/me', function(response) {
+		      console.log('Successful login for: ' + response.name);
+		      document.getElementById('status').innerHTML =
+		        'Thanks for logging in, ' + response.email + '!';
+		      hideMain();
+		      showContentTransition();
+		      
+		      //verificar se o usuário já existe na base
+		      
+		      $(document).ready(
+				function() {
+					
+					$.ajax({
+						type: 'POST',
+						data: {"email" : response.email},
+						url: '/apps/public/isUsuarioExistente',
+						dataType: 'json',
+						success: function(data){
+							
+							window.localStorage.setItem("herbiee_navigation", data.usuario.id_usuario + ';;;;' + response.email);
+							
+							//$(window).attr('location','inicio.html?iduser='+data.usuario.id_usuario+'&email='+response.email);
+							$(window).attr('location','inicio.html');
+							
+							
+						},
+						error: function(data){
+							
+							$.ajax({
+								type: 'POST',
+								data: {"email" : response.email},
+								url: '/apps/public/cadastrarUsuarioFacebook',
+								//url: 'http://invitarehom.pe.hu/apps/public/cadastrarUsuarioFacebook',
+								dataType: 'json',
+								success: function(data2){
+									
+									window.localStorage.setItem("herbiee_navigation", data2.usuario.id_usuario + ';;;;' + response.email);
+									//$(window).attr('location','inicio.html?iduser='+data2.usuario.id_usuario+'&email='+response.email);
+									$(window).attr('location','inicio.html');
+									
+								},
+								error: function(data){
+									
+									alert("Ops! Erro inesperado. Tente novamete.");
+								    
+								}
+							});
+						    
+						}
+					});					
+					
+				});
+		      
+		    });
+		  } */
+		</script>        
+        
+		<script>
+		  /* window.fbAsyncInit = function() {
+		    FB.init({
+		      appId      : '324331947773033',
+		      xfbml      : true,
+		      version    : 'v2.2'
+		    });
+		  };
+		
+		  (function(d, s, id){
+		     var js, fjs = d.getElementsByTagName(s)[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement(s); js.id = id;
+		     js.src = "//connect.facebook.net/en_US/sdk.js";
+		     fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk')); */
+
+
+
+		   
+		</script>        
+        
+		
+    </head>
+	
+	
+	<!--body onload="checkLoginState()"-->
+	<body>
+	
+	<!-- Page starts here -->
+		<div data-role="page" data-theme="a" id="page1">
+		<div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+			<h1>Flanelinha Online</h1>
+		</div>
+		<div data-role="content" id="contentMain" name="contentMain">
+		
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+	        
+				<div align="center"><img src="img/logo_512_a60.png" width="150px"></div>        
+				
+				<!-- <table width="100%">
+						<tr>
+							<td style="width: 50%" align="center"><img id="login-with-facebook" src="img/facebook.png"></td>
+						</tr>
+						<tr>
+							<td style="width: 50%" align="center"><img id="login-with-google" src="img/google.png"></td>
+						</tr>
+				</table> -->
+	        
+				<form id="form1">
+					<!-- div id="emailDiv" data-role="fieldcontain"-->
+						<p>
+							<label for="email">E-mail:</label>
+							<input id="email" name="email_r" type="email" class="ui-bar-c" value=""/>
+						</p>
+					<!-- /div>
+					<div id="senhaDiv" data-role="fieldcontain"-->
+						<p>
+							<label for="senha">Senha:</label>
+							<input id="senha" name="senha_r" type="password" class="ui-bar-c" value=""/>
+						</p>
+						<p>
+							<fieldset data-role="controlgroup">
+							    <input type="checkbox" name="manterConectado" id="manterConectado" checked="checked">
+							    <label for="manterConectado">Lembrar Senha</label>
+							</fieldset>
+						</p>						
+					<!-- /div>
+					<div id="submitDiv" data-role="fieldcontain" align="center"-->
+					
+					<table width="100%">
+						<tr>
+							<td style="width: 50%"><input id="btnCadastrar" type="button" value="Cadastrar" data-inline="true" /></td>
+							<td style="width: 50%" align="right"><input type="submit" value="&nbsp;&nbsp;&nbsp;E n t r a r&nbsp;&nbsp;&nbsp;" data-inline="true" data-theme="b"/></td>
+						</tr>					
+						<tr>
+							<td colspan="2" align="right"><fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button></td>
+						</tr>
+					</table>
+					
+					<a href="#" id="btnEsqueciMinhaSenha">Esqueci minha senha</a>
+					
+					<!-- /div-->
+
+					<p align="right">
+						<div class="fb-like" data-share="true" data-width="450" data-show-faces="true"></div>
+					</p>
+					
+					<div id="status"></div>
+
+				</form>
+				
+			</div>
+		</div>
+
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div>Por favor, preencha todos os campos obrigatórios.</div>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div id="msgServer" style="font-size: 20px"></div>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>		
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->
+				
+
+</div> <!-- page1 -->
+<!-- Page ends here -->
+</body>
+
+        <script>
+			
+			/**************** FORMULARIO *****************/
+
+			// Global declarations - assignments made in $(document).ready() below
+			var hdrMainvar = null;
+			var contentMainVar = null;
+			var ftrMainVar = null;
+			var contentTransitionVar = null;
+			var form1var = null;
+			var confirmationVar = null;
+			var contentDialogVar = null;
+			var contentDialog2Var = null;
+			var hdrConfirmationVar = null;
+			var contentConfirmationVar = null;
+			var ftrConfirmationVar = null;
+			var inputMapVar = null;
+			// Constants
+			var MISSING = "missing";
+			var EMPTY = "";
+			var NO_STATE = "ZZ";
+			
+			var isManterConectado = true;
+			
+			/**************** FORMULARIO *****************/
+			
+			</script>
+			
+			<script>
+
+
+			
+			</script>
+			
+			<script>
+
+			  function getEmailCallback(obj){
+
+				  //alert(obj.email);
+
+				  $(document).ready(
+							function() {
+
+								$.ajax({
+									type: 'POST',
+									data: {"email" : obj.email, "idGoogle" : obj.id},
+									url: '/apps/public/loginGoogle',
+									dataType: 'json',
+									success: function(data){
+
+										//alert("dfsdfsdfd");
+										
+										window.localStorage.setItem("herbiee_navigation", data.iduser + ';;;;' + data.email);
+
+										//window.JSNotifications.iniciarServiceNotifications(data.usuario.id_usuario,data.usuario.email);
+										
+										//$(window).attr('location','inicio.html?iduser='+data.usuario.id_usuario+'&email='+data.usuario.email);
+										$(window).attr('location','inicio.html');
+									    
+										//$(window).attr('location','inicio.html?iduser='+data.usuario.id_user+'&email='+data.usuario.email);
+										
+									},
+									error: function(data){
+										
+										//alert(data.responseText);
+									    
+									    hideMain();
+									    
+									    hideContentTransition();
+									    
+									    $("#msgServer").empty();
+									    $("#msgServer").append(formatarMsgErro(data.responseText));
+									    
+									    showContentDialog2(data);
+									    
+									}
+								});								
+								
+								
+				  			});
+							
+		
+
+				  
+				  
+				    /* var el = document.getElementById('email');
+				    var email = '';
+
+				    if (obj['email']) {
+				      email = 'Email: ' + obj['email'];
+				    }
+
+				    //console.log(obj);   // Remover comentários para inspecionar o objeto inteiro.
+
+				    el.innerHTML = email;
+				    toggleElement('email'); */
+				  }			
+
+			function signinCallback(authResult) {
+
+				  if (authResult['status']['signed_in']) {
+				    // Update the app to reflect a signed in user
+				    // Hide the sign-in button now that the user is authorized, for example:
+				    
+				    //alert(authResult['access_token']);
+				    
+				    gapi.auth.setToken(authResult);
+
+				    gapi.client.load('oauth2', 'v2', function() {
+				          var request = gapi.client.oauth2.userinfo.get();
+				          request.execute(getEmailCallback);
+				        });				    
+				    
+
+				    /* $.ajax({
+						type: 'GET',
+						url: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + authResult['access_token'],
+						dataType: 'json',
+						success: function(data){
+
+							//$(window).attr('location',data.url)
+
+							console.log('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + authResult['access_token']);
+							
+							alert(data.email);
+
+						    //if(data.status == true){
+							  //  alert("data");		
+						    //}
+							
+						},
+						error: function(){
+
+							alert("ERRO!!!");
+							
+						}
+					});	 */
+				    
+
+/* 					  gapi.client.load('oauth2', 'v2', function() {
+			                gapi.client.oauth2.userinfo.get().execute(function(resp){
+			                    email = resp.email; //get user email
+			                    given_name = resp.given_name; //get user email
+			                    family_name=resp.family_name;
+			                    id=resp.id;
+			                    //if (i<2) { //execute the doLogin just one time (my cheat)
+									alert(email);
+			                        //doLogin(email,given_name,family_name,id); //dologin does my logic with an ajax call to signup/register user to my site
+			                    //}
+			                    //i=2;
+			                });
+			            }); */
+					    
+				  } else {
+				    // Update the app to reflect a signed out user
+				    // Possible error values:
+				    //   "user_signed_out" - User is signed-out
+				    //   "access_denied" - User denied access to your app
+				    //   "immediate_failed" - Could not automatically log in the user
+				    console.log('Sign-in state: ' + authResult['error']);
+				  }
+			}			
+			
+				$(document).ready(
+					function() {
+
+						   // Additional params including the callback, the rest of the params will
+						   // come from the page-level configuration.
+						   var additionalParams = {
+						     'callback': signinCallback
+						   };
+						
+						   // Attach a click listener to a button to trigger the flow.
+						   /* var signinButton = document.getElementById('signinButton');
+						   signinButton.addEventListener('click', function() {
+						     gapi.auth.signIn(additionalParams); // Will use page level configuration
+						   }); */
+				
+						   var loginButtonGoogle = $('#login-with-google');
+				
+							/* openFB.init({appId: '324331947773033'}); */
+							 
+							loginButtonGoogle.on('click', function(e) {
+				
+								e.preventDefault();
+				
+								gapi.auth.signIn(additionalParams); // Will use page level configuration
+							 
+							});
+
+
+						   /* if (typeof CDV === 'undefined') {
+							    alert('CDV variable does not exist. Check that you have included cdv-plugin-fb-connect.js correctly');
+							}
+							if (typeof FB === 'undefined') {
+							    alert('FB variable does not exist. Check that you have included the Facebook JS SDK file.');
+							}
+							 
+							document.addEventListener('deviceready', function() {
+							    try {
+							        FB.init({
+							            appId: "324331947773033",
+							            nativeInterface: CDV.FB,
+							            useCachedDialogs: false
+							        });
+							    } catch (e) {
+							        alert(e);
+							    }
+							}, false); */
+
+						var loginButton = $('#login-with-facebook');
+
+						//openFB.init({appId: '324331947773033'});
+						openFB.init({appId: '324331947773033'}, 'http://flanelinhaonline.com/apps/oauthcallback.html', window.localStorage);
+						 
+						loginButton.on('click', function(e) {
+
+							e.preventDefault();
+
+							//$(window).attr('location','/apps/public/login/fb');
+
+							/*$.ajax({
+								type: 'GET',
+								url: '/apps/public/login/fb',
+								//url: 'http://goo.gl/iaSAi3' + '/login/fb',
+								dataType: 'json',
+								success: function(data){
+
+									$(window).attr('location',data.url)
+
+									//alert("dfsdfdasd: " + data.url);
+
+								    //if(data.status == true){
+									  //  alert("data");		
+								    //}
+									
+								},
+								error: function(){
+
+									alert("ERRO!!!");
+									alert(data);
+									
+								}
+							});*/							
+
+							
+
+						        openFB.login(
+						                function(response) {
+						                    if(response.status === 'connected') {
+						                        //alert('Facebook login succeeded, got access token: ' + response.authResponse.token);
+						                        
+						                        alert(JSON.stringify(response));
+						                        
+						                        openFB.api({
+						                            path: '/me',
+						                            success: function(data3) {
+						                                //console.log(JSON.stringify(data));
+						                                //document.getElementById("userName").innerHTML = data.name;
+						                                
+						                            	$.ajax({
+						        						type: 'POST',
+						        						data: {"email" : data3.email},
+						        						url: '/apps/public/isUsuarioExistente',
+						        						dataType: 'json',
+						        						success: function(data2){
+						        							
+						        							window.localStorage.setItem("herbiee_navigation", data2.usuario.id_usuario + ';;;;' + data3.email);
+						        							
+						        							//$(window).attr('location','inicio.html?iduser='+data.usuario.id_usuario+'&email='+response.email);
+						        							$(window).attr('location','inicio.html');
+						        							
+						        							
+						        						},
+						        						error: function(data){
+						        							
+						        							$.ajax({
+						        								type: 'POST',
+						        								data: {"email" : data3.email},
+						        								url: '/apps/public/cadastrarUsuarioFacebook',
+						        								//url: 'http://invitarehom.pe.hu/apps/public/cadastrarUsuarioFacebook',
+						        								dataType: 'json',
+						        								success: function(data5){
+						        									
+						        									window.localStorage.setItem("herbiee_navigation", data5.usuario.id_usuario + ';;;;' + data3.email);
+						        									//$(window).attr('location','inicio.html?iduser='+data2.usuario.id_usuario+'&email='+response.email);
+						        									$(window).attr('location','inicio.html');
+						        									
+						        								},
+						        								error: function(data){
+						        									
+						        									alert("Ops! Erro inesperado. Tente novamete.");
+						        								    
+						        								}
+						        							});
+						        						    
+						        						}
+						        					});							                                
+						                                
+						                            },
+						                            error: errorHandler});						                        
+						                        
+						                        /* openFB.api({path: '/me', success: function(r){
+						                        	alert(r.email);
+						                        }, error: errorHandler}); */						                        
+					
+						                        
+															
+												
+						                    } else {
+						                        alert('Facebook login failed: ' + response.error);
+						                    }
+						                }, {scope: 'email,read_stream,publish_stream'});
+
+						 
+							/* FB.login(function(response) {
+								if (response.status === 'connected') {
+									alert('logged in');
+								} else {
+									alert('not logged in');
+								}
+							},{ scope: "email" }); */
+						 
+						});
+
+						
+						// Assign global variables
+						hdrMainVar = $('#hdrMain');
+						contentMainVar = $('#contentMain');
+						ftrMainVar = $('#ftrMain');
+						contentTransitionVar = $('#contentTransition');
+						form1Var = $('#form1');
+						confirmationVar = $('#confirmation');
+						contentDialogVar = $('#contentDialog');
+						contentDialog2Var = $('#contentDialog2');
+						hdrConfirmationVar = $('#hdrConfirmation');
+						contentConfirmationVar = $('#contentConfirmation');
+						ftrConfirmationVar = $('#ftrConfirmation');
+						inputMapVar = $('input[name*="_r"]');
+						hideContentDialog();
+						hideContentDialog2();
+						hideContentTransition();
+						hideConfirmation();
+						
+						//alert($.cookie('motoboy_prefs_login'));
+						
+						/* if($.cookie('motoboy_prefs_login') != 'null'){
+						    var s = $.cookie('motoboy_prefs_login');
+						    var login = s.substr(0,s.indexOf(';;;;'));
+						    var senha = s.substr(s.indexOf(';;;;')+4,s.lentgh);
+						    $('#email').val(login);
+						    $('#senha').val(senha);
+						    $('#manterConectado').attr("checked",'true');
+						    isManterConectado = true;
+						    submeter();
+						} */
+						
+					    /* handleAndroidPreferences("get", window.androidPrefsLib, "optionAlert", "", function (prefValue) {
+					    	if (prefValue === "true") {
+					      		alert("optionAlert is set to true.");
+					    	} else {
+					    		alert("optionAlert is un-equal to true.");
+					    	}
+					    }); */
+					    
+					    var urlParams;
+						//Recupera param get
+						(window.onpopstate = function () {
+						    var match,
+						        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+						        search = /([^&=]+)=?([^&]*)/g,
+						        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+						        query  = window.location.search.substring(1);
+	
+						    urlParams = {};
+						    while (match = search.exec(query))
+						       urlParams[decode(match[1])] = decode(match[2]);
+						})();				    
+
+						if(urlParams.msg == 'usuarioExistente'){
+
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServer").empty();
+						    $("#msgServer").append("Ja existe um usuario com o e-mail " + urlParams.email);
+						    
+						    showContentDialog2("Ja existe um usuario com o e-mail " + urlParams.email);
+
+						    return;
+						}
+					    
+					    var value = window.localStorage.getItem("herbiee_prefs_login");
+						if(value != null && urlParams.frommenu == null){
+						    var s = value;
+						    var login = s.substr(0,s.indexOf(';;;;'));
+						    var senha = s.substr(s.indexOf(';;;;')+4,s.lentgh);
+						    $('#email').val(login);
+						    $('#senha').val(senha);
+						    $('#manterConectado').attr("checked",'true');
+						    isManterConectado = true;
+						    submeter();
+						}
+						
+						
+						
+					});
+				
+				$('#btnCadastrar').click(
+					function(){
+					    $(window).attr('location','cadastro.html');
+					});
+				
+				$('#btnEsqueciMinhaSenha').click(
+						function(){
+						    $(window).attr('location','esqueciMinhaSenha.html');
+						});				
+				
+				
+				
+				$('#manterConectado').click(
+					function(){
+					    isManterConectado = this.checked 
+					});			
+				
+				
+				
+				$('#buttonOK').click(
+					function() {
+						hideContentDialog();
+						showMain();
+						return false;
+					});
+				
+				$('#buttonOK2').click(
+					function() {
+						hideContentDialog2();
+						showMain();
+						return false;
+					});			
+				
+				$('#form1').submit(
+					function() {
+					    return submeter();
+					});
+				
+					function submeter(){
+						var err = false;
+						// Hide the Main content
+						hideMain();
+						
+						// Reset the previously highlighted form elements
+						inputMapVar.each(
+							function(index){
+									$(this).prev().removeClass(MISSING);
+							});
+						
+						// Perform form validation
+						inputMapVar.each(
+							function(index){
+								if($(this).val()==null || $(this).val()==EMPTY){
+									$(this).prev().addClass(MISSING);
+									err = true;
+								}
+							});
+	
+						// If validation fails, show Dialog content
+						if(err == true){
+							showContentDialog();
+							return false;
+						}
+	
+						// If validation passes, show Transition content
+						showContentTransition();
+						
+						// Submit the form
+	/* 					$.post("requestProcessor.php", form1Var.serialize(), 
+							function(data){
+								//confirmationVar.text(data);
+								hideContentTransition();
+								//showConfirmation();
+								$(window).attr('location','inicio.html');
+								//$(location).attr('href','inicio.html');
+							}); */
+						
+						/* $.ajaxSetup({
+						    headers: {
+							  'Access-Control-Allow-Origin': "*",
+						      'Authorization': "Basic " + window.btoa("mtbe:expresso")
+						    }
+						  }); */		
+							
+						//var data = '{"email" : '+$('#email').val()+', "password" : '+$('#senha').val()+' }';
+						
+					    
+						
+						if(isManterConectado){
+						    var val = $('#email').val() + ';;;;' + $('#senha').val();
+							
+						    //$.cookie('motoboy_prefs_login', val, {expires : 7, path: '/'});
+	
+							//window.androidPrefsLib = "MotoboyPrefs";
+							//handleAndroidPreferences("set", window.androidPrefsLib, "optionAlert", "true", androidPreferencesCallback);
+							
+						    window.localStorage.setItem("herbiee_prefs_login", val);
+							
+					    }else{
+							//$.cookie('motoboy_prefs_login', null);
+							
+							window.localStorage.clear();
+					    }
+							
+						$.ajax({
+							type: 'POST',
+							data: {"email" : $('#email').val(), "password" : $('#senha').val(), "app" : "flanelinhaonline" },
+							url: '/apps/public/login',
+							dataType: 'json',
+							success: function(data){
+								
+								window.localStorage.setItem("herbiee_navigation", data.usuario.id_usuario + ';;;;' + data.usuario.email);
+
+								//window.JSNotifications.iniciarServiceNotifications(data.usuario.id_usuario,data.usuario.email);
+								
+								//$(window).attr('location','inicio.html?iduser='+data.usuario.id_usuario+'&email='+data.usuario.email);
+								$(window).attr('location','inicio.html');
+							    
+								//$(window).attr('location','inicio.html?iduser='+data.usuario.id_user+'&email='+data.usuario.email);
+								
+							},
+							error: function(data){
+								
+								//alert(data.responseText);
+							    
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append(JSON.parse(data.responseText));
+							    
+							    showContentDialog2(data);
+							    
+							}
+						});
+	
+						return false;				    
+					} 
+					
+				    function errorHandler(error) {
+				        alert(error.message);
+				    }
+	
+					function hideMain(){
+						hdrMainVar.hide();
+						contentMainVar.hide();
+						ftrMainVar.hide();
+					}
+	
+					function showMain(){
+						hdrMainVar.show();
+						contentMainVar.show();
+						ftrMainVar.show();
+					}
+	
+					function hideContentTransition(){
+						contentTransitionVar.hide();
+					}
+	
+					function showContentTransition(){
+						contentTransitionVar.show();
+					}
+	
+					function hideContentDialog(){
+						contentDialogVar.hide();
+					}
+					
+					function hideContentDialog2(){
+						contentDialog2Var.hide();
+					}				
+	
+					function showContentDialog(){
+						contentDialogVar.show();
+					}
+					
+					function showContentDialog2(data){
+						contentDialog2Var.show();
+					}				
+	
+					function hideConfirmation(){
+						hdrConfirmationVar.hide();
+						contentConfirmationVar.hide();
+						ftrConfirmationVar.hide();
+					}
+	
+					function showConfirmation(){
+						hdrConfirmationVar.show();
+						contentConfirmationVar.show();
+						ftrConfirmationVar.show();
+					}
+			</script>
+			
+			 
+
+</html>

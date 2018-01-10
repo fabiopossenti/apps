@@ -1,0 +1,15 @@
+/bootstrap/compiled.php
+/vendor
+composer.phar
+composer.lock
+.env.*.php
+.env.php
+.DS_Store
+Thumbs.db
+/banco.sql
+/banco_app.sql
+/banco_app_perfil.sql
+/banco_complemento_flanelinha_online.sql
+/banco_completo_producao.sql
+/banco_perfil.sql
+/banco_perfil_complemeto_producao.sql

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+
+        <title>Projeto FORMAR - Cadastro Tipo de Fornecedor</title>        
+
+    </head>
+    
+	<style>
+	
+		.ui-panel-inner {
+			padding: 0px; 
+		}
+		
+		input[type=number]::-webkit-inner-spin-button, 
+		input[type=number]::-webkit-outer-spin-button { 
+	  		-webkit-appearance: none; 
+	  		margin: 0; 
+		}	
+	
+	</style>    
+	
+	<body>
+	
+	<!-- Page starts here -->
+		<div data-role="page" data-theme="a" id="page1">
+
+		<div data-role="panel" id="menu" data-position="left" data-display="push" data-dismissible="true" style="background-color: #33B5E5;padding: 0px">
+			
+			<div><img src="img/fundo_menu.png" style="width: 100%; height: 120px"></div>
+			<div><img src="img/user.png" style="margin-left:5px; width: 40px;position: absolute; top: 10px;"></div>
+			<div id="emailUsuario" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 80px;" ></div>			
+			<div id="perfilSelecionado" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 100px;" ></div>
+			<div style="margin: 5px">
+				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="$(window).attr('location', 'homeAdministrador.html');" style="text-align: left;">Home</a>
+				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="$(window).attr('location', 'meusDadosAdministrador.html');" style="text-align: left;" >Meus Dados</a>
+				<a data-role="button" data-icon="gear" data-position-to="window" href="#" onclick="$(window).attr('location', 'selecionarPerfil.html?ok=1');" style="text-align: left;">Perfil</a>			
+				<a data-role="button" data-position-to="window" href="#" style="text-align: left;" data-theme="b">Cadastros</a>
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="$(window).attr('location', 'cadastroUsuarioAdministrador.html');" style="text-align: left;" >Usuário</a>
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="$(window).attr('location', 'cadastroTipoFornecedor.html');" style="text-align: left;background-color: yellow" >Tipo de Fornecedor</a>
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="$(window).attr('location', 'cadastroFornecedor.html');" style="text-align: left;" >Fornecedor</a>			
+				<a data-role="button" data-icon="power" data-position-to="window" href="#" onclick="$(window).attr('location','login.html?frommenu=1');" style="text-align: left;">Sair</a>
+			</div>
+			
+		</div>
+		<!-- menu  -->
+		
+		<!-- home -->
+		<div data-role="panel" id="home" data-position="right" data-display="push" data-dismissible="true" data-theme="a" style="background-color: #a50a0c;padding: 0px">
+			
+				<div><img src="img/fundo_eventos.png" style="width: 100%; height: 100px"></div>
+				
+				<div style="margin: 5px">
+					  
+					  <div class="ui-corner-all" align="center">
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					  </div>
+					  
+					  <br/>
+					  
+					  <ul id="eventoRecente" data-inset="true" data-role="listview">
+					  </ul>
+					  
+				</div>
+			
+		</div>
+		<!-- home  -->		
+		
+		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
+			<h1 id="tituloPagina">Projeto FORMAR <br/> Cadastro Tipo de Fornecedor</h1>
+			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
+			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
+		</div>
+		
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacaoExclusao" name="contentDialogConfirmacaoExclusao">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="50%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmarExclusao()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao1" name="contentDialogConfirmacao1">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_1" style="font-size: 20px"></div>
+				<table width="0%" style="padding: 10px">
+					<tr>
+						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="33%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" onclick="recusar1()" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="33%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmar1()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>		
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao2" name="contentDialogConfirmacao2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="50%" align="left"><a id="buttonSim2" name="buttonSim2" onclick="confirmar2()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>					
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->
+
+		<div data-role="content" id="contentMain" name="contentMain">
+
+			<ul id="grid" data-role="listview" data-filter="true" data-filter-placeholder="Pesquisar..." data-inset="true">		
+			</ul>
+
+			<br/>
+			
+			<div id="formulario" class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em; background-color: #B2DFDB">
+			
+				<form id="form1" action="cadastrarTipoFornecedor" method="post" enctype="multipart/form-data">
+						<table width="100%">
+							<tr>
+						 		<td style="width: 50%"><p><b>CADASTRO</b></p></td>
+					     		<td id="btnExcluir" style="width: 50%" align="right"><input type="button" onclick="excluir()" value="Exluir" data-inline="true" data-theme="b"/></td>
+					     	</tr>
+					     </table>
+						
+						<p>
+							<label for="nome">Nome:</label>
+							<input id="nome" name="nome_r" maxlength="200" type="text" class="ui-bar-c" value=""/>
+							<input type="hidden" name="iduser" id="iduser">
+							<input type="hidden" name="email" id="email">
+							<input type="hidden" name="id" id="id">
+							<input type="hidden" name="flexcluir" id="flexcluir">
+							<input type="hidden" name="app" id="app" value="projetoformar">
+							<input type="hidden" name="perfil" id="perfil" value="3">
+						</p>
+						
+						<label>Escolher imagem<br>
+						<input type="hidden" name="MAX_FILE_SIZE" value="1000000" />
+						<input type="file" id="file" name="file" accept="image/png, image/jpeg"/><br /></label>						
+						
+						<table width="100%">
+							<tr>
+								<!-- CADASTRO -->
+								<td id="btnVoltar" style="width: 50%"><input type="button" value="Voltar" data-inline="true" data-theme="a"/></td>
+								<td id="btnCadastrar" style="width: 50%" align="right"><input type="submit" value="Cadastrar" data-inline="true" data-theme="b"/></td>
+								<!-- EDICAO -->
+								<td id="btnCancelar" style="width: 50%"><input type="button" value="Cancelar" data-inline="true" data-theme="a"/></td>
+								<td id="btnConfirmar" style="width: 50%" align="right"><input type="submit" value="Confirmar" data-inline="true" data-theme="b"/></td>
+							</tr>
+						</table>						
+						
+				</form>
+				
+			</div>			
+			
+		</div>
+
+</div> <!-- page1 -->
+　
+<!-- Page ends here -->
+</body>
+
+			<script>
+			
+				$(document).ready(
+						function() {
+						
+							/*$("#corpo_").load("template_padrao.html", function(){
+				                $(".ui-content").css("padding","0em");
+				            });
+							
+							$("#menu_").load("template_cadastro.html", function(){
+				                $("#page1").page();
+				                $("#corpo_").trigger("create");
+				                $("body").trigger("create");
+								var titulo = "Projeto FORMAR <br/> Tipo de Fornecedor";
+								document.title = "Projeto FORMAR - Tipo de Fornecedor";
+				                $("#tituloPagina").empty();
+								$("#tituloPagina").append(titulo);
+				            });*/
+				            
+							 $(".ui-content").css("padding","0em");				            
+				            
+							var navigation = window.localStorage.getItem("herbiee_navigation");
+							if(navigation != null){
+							    var s = navigation;
+							    iduser_ = s.substr(0,s.indexOf(';;;;'));
+							    email_ = s.substr(s.indexOf(';;;;')+4,s.indexOf(',,,,')-(s.indexOf(';;;;')+4));
+							    perfil_ = s.substr(s.indexOf(',,,,')+4,s.lentgh);
+							}
+							
+							if(iduser_ == null || email_ == null){
+								$(window).attr('location','login.html');
+							}
+							
+							if(perfil_ != 3){
+								$(window).attr('location','login.html?frommenu=1');
+							}				            
+							
+							carregar();
+							
+						});
+			
+				function resetar(){
+					$('#formulario').css('background-color','#B2DFDB');
+					$('#btnConfirmar').hide();
+					$('#btnExcluir').hide();
+					$('#btnCancelar').hide();
+					$('#btnCadastrar').show();
+					$('#btnVoltar').show();
+					$('#id').val(null);
+					$("#nome").val('');
+					$("#file").val('');
+					$("#flexcluir").val(null);
+				}
+
+				$('#form1').submit(function() {
+					
+					if(isArquivoGrande){
+						hideMain();
+
+						hideContentTransition();
+
+						$("#msgServerErro").empty();
+						$("#msgServerErro").append("Tamanho máximo de bytes excedido do arquivo. Tamanho máximo: 1MB.");
+						
+						showContentDialog();
+						
+						return false;
+					}
+					
+					var err = false;
+					// Hide the Main content
+					hideMain();
+
+					// Reset the previously highlighted form elements
+					inputMapVar.each(function(index) {
+						$(this).prev().removeClass(MISSING);
+					});
+
+					// Perform form validation
+					inputMapVar.each(function(index) {
+						if ($(this).val() == null || $(this).val() == EMPTY) {
+							$(this).prev().addClass(MISSING);
+							err = true;
+						}
+					});
+
+					// If validation fails, show Dialog content
+					if (err == true) {
+						$("#msgServerErro").empty();
+						$("#msgServerErro").append("Por favor, preencha todos os campos obrigatórios.");
+						showContentDialog();
+						return false;
+					}
+
+					// If validation passes, show Transition content
+					showContentTransition();
+
+					var form = document.getElementById('form1');
+					var request = new XMLHttpRequest();
+
+					//e.preventDefault();
+					var formdata = new FormData(form);
+
+					request.open('post', '../cadastrarTipoFornecedor');
+					//request.addEventListener('load', transferComplete, false);
+					request.onreadystatechange = function (aEvt) {
+						  if (request.readyState == 4) {
+						  	if(request.status == 200)
+						  		transferComplete(request.responseText);
+						    else
+						    	transferFailed(request.responseText);
+						  }
+						};					
+					request.send(formdata);
+
+					return false;
+				});
+				
+				$('#file').bind('change', function() {
+					
+					try{
+						if(this.files[0].size > 1000000){
+							isArquivoGrande = true;
+						}else{
+							isArquivoGrande = false;
+						}
+					}catch(e){
+						
+					}
+
+				});				
+
+				function transferComplete(data) {
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServer").empty();
+					$("#msgServer").append(JSON.parse(data));
+
+					showContentDialog2();
+					
+					if($('#id').val() == null || $('#id').val() == ''){
+						$('input[data-type="search"]').val('');
+					}
+					
+					resetar();
+					
+					carregar();
+					
+					$(".ui-input-search input").attr('data-lastval', '').trigger("change");
+					
+				}
+				
+				function transferFailed(data) {
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServerErro").empty();
+					$("#msgServerErro").append("Falha ao enviar o arquivo.<br/><br/>");
+					$("#msgServerErro").append(JSON.parse(data));
+
+					showContentDialog();
+					
+				}				
+
+				function carregar() {
+
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type : 'GET',
+						url : "/apps/public/obterTipoFornecedor/"+email_+"/"+iduser_+"/projetoformar",
+						dataType : 'json',
+						success : function(data) {
+							if (data.status == true) {
+								list = data;
+								$('#grid').empty();
+								for (i = 0; i < list.TipoFornecedor.length; i++) {									
+									var img = '<img src="#"/>';
+									if(list.TipoFornecedor[i].caminho_midia != null){
+										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'uploads/' + list.TipoFornecedor[i].caminho_midia + '\') center center / 200%;"/>';
+									}else{
+										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;"/>';
+									}
+									$('#grid').append('<li data-icon="edit" onclick="editar('+list.TipoFornecedor[i].id_tipo_fornecedor+',\''+list.TipoFornecedor[i].nome+'\',\''+list.TipoFornecedor[i].caminho_midia+'\');"><a href="#"><table width="100%"><tr><td align="left" width="100px" style="vertical-align: top">' + img + '</td><td align="left" style="margin-left: 5px"><font color="black" size="5px" style="white-space: normal;"><b>' + list.TipoFornecedor[i].nome + '</b></font></td></tr></table></a></li>');
+								}
+								$('#grid').listview("refresh");
+								$.mobile.loading("hide");
+	
+							}
+	
+						},
+						error : function() {
+								$.mobile.loading("hide");
+						}
+					});
+				}
+				
+				function editar(id, nome, caminho_midia){
+					
+					$('#formulario').css('background-color','#F4FF81');
+					$('#btnCadastrar').hide();
+					$('#btnVoltar').hide();
+					$('#btnConfirmar').show();
+					$('#btnExcluir').show();
+					$('#btnCancelar').show();
+					$('#id').val(id);
+					
+					$("#nome").val(nome);
+					$("#file").val('');
+					
+					$("#file").focus();
+					
+					isArquivoGrande = false;
+
+				}
+				
+				function excluir(){
+					
+					hideMain();
+
+					hideContentTransition();
+
+					$("#msgServer2").empty();
+					$("#msgServer2").append("Confirma a exclusão do registro?");
+
+					showContentDialogConfirmacaoExclusao();					
+
+				}
+				
+				function confirmarExclusao(){
+					$('#flexcluir').val('1');
+					$('#form1').submit();
+					hideContentDialogConfirmacaoExclusao();
+					showMain();
+					resetar();
+				}
+			</script>
+			
+			<script src="js/jsGeral.js"></script>
+			<script src="js/jsCadastros.js"></script>			
+
+</html>

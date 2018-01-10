@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">		
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+		
+		
+        <title>Projeto FORMAR</title>        
+
+    </head>
+    
+    <script>
+    
+    var contentDialog2Var = null;
+    
+    var listEventos;
+    
+    var listEventosRecentes;
+    
+    var jaAbriuCotacao = false;
+    
+    qtdEventosRecentes = 0;
+    
+    var iduser_;
+    
+    var email_;
+
+    var idEventoVeiculo_;
+
+    var confirmouLeitura = false;
+
+    $( document ).on( "click", ".show-page-loading-msg", function() {
+    	    var $this = $( this ),
+    	        theme = $this.jqmData( "theme" ) || $.mobile.loader.prototype.options.theme,
+    	        msgText = $this.jqmData( "msgtext" ) || $.mobile.loader.prototype.options.text,
+    	        textVisible = $this.jqmData( "textvisible" ) || $.mobile.loader.prototype.options.textVisible,
+    	        textonly = !!$this.jqmData( "textonly" );
+    	        html = $this.jqmData( "html" ) || "";
+    	    $.mobile.loading( "show", {
+    	            text: msgText,
+    	            textVisible: textVisible,
+    	            theme: theme,
+    	            textonly: textonly,
+    	            html: html
+    	    });
+    	})
+    	.on( "click", ".hide-page-loading-msg", function() {
+    	    $.mobile.loading( "hide" );
+    	});
+    
+	$(document).ready(
+			function() {
+				
+				$("#menu_").load("template_cadastro.html", function(){
+	                $("#page1").page();
+	                $("#menu_").trigger("create");
+	                $("body").trigger("create");
+	            });
+				//$.mobile.loadPage("inicio2.html");
+				//$('#contentMain').load("inicio2.html");
+				
+			    carregarParametros();
+			    //carregarEventos();
+
+				$('#arquivarNegativo').click(
+						function() {
+							confirmarLeitura(2);		
+						});
+
+				$('#arquivarPositivo').click(
+						function() {
+							confirmarLeitura(1);		
+						});	
+
+				$('#aindaNaoVi').click(
+						function() {
+							$('#contentViewEventoRecente').hide();
+						    showMain();
+						    $("#home").panel("open");
+						});				
+
+				$('#contentViewEventoRecente').hide();			
+			    
+			});
+
+			function carregarParametros(){
+
+ 				(window.onpopstate = function () {
+				    var match,
+				        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+				        search = /([^&=]+)=?([^&]*)/g,
+				        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+				        query  = window.location.search.substring(1);
+
+				    urlParams = {};
+				    while (match = search.exec(query))
+				       urlParams[decode(match[1])] = decode(match[2]);
+				    
+				    //$('#emailUsuario').append(urlParams.email);
+				    //verificarEventosRecentes();
+
+				     if(urlParams.fb != null){
+					    //if(urlParams.msg == 'usuarioExistente'){
+					    	//$(window).attr('location','login.html?frommenu=1&msg=usuarioExistente&emailExistente=' + urlParams.email);
+						//}
+
+					    window.localStorage.setItem("herbiee_navigation", urlParams.iduser + ';;;;' + urlParams.email);
+						
+					} 
+				    
+				})();				
+				
+				var loginGoogle = window.localStorage.getItem("herbiee_login_google");
+				if(loginGoogle != null){
+				    var s = loginGoogle;
+				    iduser_ = s.substr(0,s.indexOf(';;;;'));
+				    email_ = s.substr(s.indexOf(';;;;')+4,s.lentgh);
+					alert(iduser_);
+					if(iduser_ == 'ERRO'){
+						alert(iduser_);
+						$(window).attr('location','login.html?frommenu=1');
+					}else{
+					
+					alert(iduser_);
+					alert(email_);
+					
+								$.ajax({
+									type: 'POST',
+									data: {"email" : email_, "idGoogle" : iduser_},
+									url: '/herbiee/public/loginGoogle',
+									dataType: 'json',
+									success: function(data){
+
+										//alert("dfsdfsdfd");
+										
+										window.localStorage.setItem("herbiee_navigation", data.iduser + ';;;;' + data.email);
+
+										//window.JSNotifications.iniciarServiceNotifications(data.usuario.id_usuario,data.usuario.email);
+										
+										//$(window).attr('location','inicio.html?iduser='+data.usuario.id_usuario+'&email='+data.usuario.email);
+										$(window).attr('location','inicio.html');
+									    
+										//$(window).attr('location','inicio.html?iduser='+data.usuario.id_user+'&email='+data.usuario.email);
+										
+									},
+									error: function(data){
+										
+										//alert(data.responseText);
+									    
+									    hideMain();
+									    
+									    hideContentTransition();
+									    
+									    $("#msgServer").empty();
+									    $("#msgServer").append(formatarMsgErro(data.responseText));
+									    
+									    showContentDialog2(data);
+									    
+									}
+								});						
+					
+					}
+				}				
+			}
+	
+			function carregarEventos(){
+
+				$.mobile.loading( "show" );
+			    
+			    $.ajax({
+					type: 'GET',
+					url: '/herbiee/public/eventos',
+					dataType: 'json',
+					success: function(data){
+					    if(data.status == true){
+							listEventos = data;
+							$('#evento').empty();
+							
+							for(i=0;i<listEventos.Eventos.length;i++){
+							    
+							    if($('#evento').html().indexOf(("eve_"+listEventos.Eventos[i].id_evento)) == -1){
+							    	$('#evento').append('<input type="checkbox" value='+listEventos.Eventos[i].id_evento+' name="eve_'+listEventos.Eventos[i].id_evento+'" id="eve_'+listEventos.Eventos[i].id_evento+'">');
+							    	$('#evento').append('<label for="eve_'+listEventos.Eventos[i].id_evento+'">'+listEventos.Eventos[i].descricao+'</label>');
+							    }
+							    
+							}
+							
+							$("#evento").trigger("create");
+
+							$.mobile.loading( "hide" );
+
+					    }
+						
+					},
+					error: function(){
+
+						$.mobile.loading( "hide" );
+						
+					}
+				});	
+			}
+			
+			//window.setInterval('verificarEventosRecentes()', 7000);
+			
+			function exibirAlerta(idEventoVeiculo){
+
+			    $.ajax({
+					type: 'GET',
+					url: '/herbiee/public/eventoRecente/'+iduser_+'/'+email_+'/'+idEventoVeiculo,
+					dataType: 'json',
+					success: function(data){
+					    if(data.status == true){
+
+					    	$.mobile.loading( "hide" );
+
+					    	//$('#popupViewEventoRecente').popup("reposition");
+					    	//$('#popupViewEventoRecente').popup("open");
+					    	
+
+							contentMainVar.hide();
+
+							ftrMainVar.hide();
+					    
+					    	hideContentTransition();
+					    	
+					    	$("#home").panel("close");
+
+					    	$('#contentViewEventoRecente').show();
+
+					    	$('#eventoRecenteContent').empty();
+
+							if(data.Avaliacao == 'N/A'){
+						    	$('#eventoRecenteContent').append('<font color="green" size="5px"><b>Data: ' + formatarDataHora(data.EventosRecentes[0].created_at) + '</b></font><br><font color="blue" size="5px"><b>Placa: ' + maskPlaca(data.EventosRecentes[0].placa)
+										+ '</b></font><br><font color="red" size="5px"><b>Evento: ' + data.EventosRecentes[0].descricao + '</b></font><br><br><font color="black" size="3px"><b>Avaliação do informante: Nenhuma avaliação ainda.</b></font>');								
+							}else{
+						    	$('#eventoRecenteContent').append('<font color="green" size="5px"><b>Data: ' + formatarDataHora(data.EventosRecentes[0].created_at) + '</b></font><br><font color="blue" size="5px"><b>Placa: ' + maskPlaca(data.EventosRecentes[0].placa)
+										+ '</b></font><br><font color="red" size="5px"><b>Evento: ' + data.EventosRecentes[0].descricao + '</b></font><br><br><font color="black" size="3px"><b>Avaliação do informante: ' + data.Avaliacao + '% confiável. ' + data.TotalAvaliacao + ' avaliação(ões).</b></font>');
+							}
+
+
+
+					    	idEventoVeiculo_ = idEventoVeiculo;
+
+					    	//$( "#popupViewEventoRecente" ).popup( "option", "positionTo", "window" );
+							
+					    }
+						
+					},
+					error: function(){
+					}
+				});		
+			}
+
+			function confirmarLeitura(avaliacao){
+
+				$.mobile.loading( "show" );
+
+				$.ajax({
+					type: 'POST',
+					data: {"iduser" : iduser_,"email" : email_,"idEventoVeiculo" : idEventoVeiculo_,"avaliacao" : avaliacao},
+					url: '/herbiee/public/confirmarLeitura',
+					dataType: 'json',
+					success: function(data){
+
+						//$('#popupViewEventoRecente').popup("close");
+
+						confirmouLeitura = true;
+						
+						$.mobile.loading( "hide" );
+
+						$('#contentViewEventoRecente').hide();
+
+					    showMain();
+
+					    qtdEventosRecentes = qtdEventosRecentes - 1;
+
+					    verificarEventosRecentes();
+					    
+					    //hideContentTransition();
+					    
+					    //$("#msgServer").empty();
+					    //$("#msgServer").append("Obrigado pela sua contribuição!<br/><br/> Seu alerta foi enviado com sucesso.<br/>");
+					    
+					    //showContentDialog2(data);
+						
+					},
+					error: function(data){
+						
+						//alert(data.responseText);
+					    
+					    hideMain();
+					    
+					    hideContentTransition();
+					    
+					    $("#msgServer").empty();
+					    $("#msgServer").append(formatarMsgErro(data.responseText));
+					    
+					    showContentDialog2(data);
+
+					    $.mobile.loading( "hide" );
+					    
+					}
+				});
+				
+			}
+
+			function verificarEventosRecentes(){
+			    
+			    $.ajax({
+				type: 'GET',
+				url: '/herbiee/public/eventosRecentes/'+iduser_+'/'+email_,
+				dataType: 'json',
+				success: function(data){
+				    if(data.status == true){
+						listEventosRecentes = data;
+
+						if(confirmouLeitura && listEventosRecentes.EventosRecentes.length == 0){
+							$('#eventoRecente').empty();							
+						}
+						
+						for(i=0;i<listEventosRecentes.EventosRecentes.length;i++){
+
+						    if($('#eventoRecente').html().indexOf(("ever_"+listEventosRecentes.EventosRecentes[i].id_evento_veiculo)) == -1 || confirmouLeitura){
+
+								if(confirmouLeitura){
+									$('#eventoRecente').empty();
+								}
+
+						    	confirmouLeitura = false;
+							    
+								//var dtEve = listEventosRecentes.EventosRecentes[i].datahora_solicitacao.split('-');
+								//var tmSol = dtSol[2].split(' ')[1].split(':');
+								//var dateSol = new Date(dtSol[0],dtSol[1]-1,dtSol[2].split(' ')[0],tmSol[0],tmSol[1],tmSol[2]);
+								//var dataAtual = new Date();
+								
+								//alert(dateSol);
+								//alert(dataAtual.getTime() - dateSol.getTime());
+								//alert(listCotacoesServidor.Cotacoes[i].minutos_tolerancia*60*1000);
+								//if((dataAtual.getTime() - dateSol.getTime()) > (listCotacoesServidor.Cotacoes[i].minutos_tolerancia*60*1000)){
+									//$('#destino').prepend('<div class="ui-corner-all" style="padding: 5px; background-color: #dddddd; white-space:normal; font-size: 13px; font-face: tahoma"> <font color="black" size="1px">' + listCotacoesServidor.Cotacoes[i].datahora_solicitacao + '</font><br><font color="green">De ' + listCotacoesServidor.Cotacoes[i].origem_endereco + '</font><font color="red"> para ' + listCotacoesServidor.Cotacoes[i].destino_endereco + '</font>'+
+										//'<br><i><font color="blue">' + Math.round(listCotacoesServidor.Cotacoes[i].tempo_estimado_percurso/60) + ' min | </font><font color="blue">' + (new String(Math.round(listCotacoesServidor.Cotacoes[i].distancia_ori_dest/1000))).replace('.',',') + ' Km</font></i><br>'+
+										//'<font color="#cccccc" size="1px">' + 'priorizar???' + ' '+ listCotacoesServidor.Cotacoes[i].tipo_servico.nome_tipo_servico +' '+ listCotacoesServidor.Cotacoes[i].minutos_tolerancia +'(min) '+ (listCotacoesServidor.Cotacoes[i].urgente == '1' ? 'URGENTE ' : '') + (listCotacoesServidor.Cotacoes[i].ida_volta == '1' ? '(IDA e VOLTA)' : '') + '</font><img src="img/alert_cotacao_expirada.png" width="100%"><div id="cot_'+listCotacoesServidor.Cotacoes[i].id_cotacao_cliente+'" data-role="listview" data-inset="true"></div></div><br>');
+								//}else{
+									$('#eventoRecente').append('<li id="ever_'+listEventosRecentes.EventosRecentes[i].id_evento_veiculo+'"><a href="#" data-position-to="window" class="show-page-loading-msg" onclick="exibirAlerta('+listEventosRecentes.EventosRecentes[i].id_evento_veiculo+')">' + formatarDataHora(listEventosRecentes.EventosRecentes[i].created_at) + '<br><font color="red" size="5px"><b>' + maskPlaca(listEventosRecentes.EventosRecentes[i].placa) + '</b></font><br><font color="blue" size="3px"><b>' + listEventosRecentes.EventosRecentes[i].descricao + '</b></font></a></li>');									
+
+									//$('#ever_'+listEventosRecentes.EventosRecentes[i].id_evento_veiculo).click(function(){
+								    	//$('#arquivar').empty();
+								    	//$('#arquivar').append('<font color="green"><b>' + listEventosRecentes.EventosRecentes[i].created_at + '</b></font><br><font color="red"><b>Evento:</b></font> ' + listEventosRecentes.EventosRecentes[i].descricao
+											//+ '<br><font color="blue"><b>Placa:</b></font> ' + listEventosRecentes.EventosRecentes[i].placa);
+									//});
+									 
+								//}
+						    }
+						    
+						}
+						
+						$('#eventoRecente').listview("refresh");
+						
+						if(listEventosRecentes.EventosRecentes.length > qtdEventosRecentes /* && !jaAbriuCotacao */){
+						    //$( "#home" ).panel( "open" );
+						    $("#btHome").fadeOut(500);
+						    $("#btHome").buttonMarkup({ theme: "b" });
+						    $("#btHome").fadeIn(500);
+						    $("#btHome").fadeOut(500);
+						    $("#btHome").fadeIn(500);
+						    $("#btHome").fadeOut(500);
+						    $("#btHome").fadeIn(500);
+						    $("#btHome").fadeOut(500);
+						    $("#btHome").fadeIn(500);						    
+						    //jaAbriuCotacao = true;
+						    qtdEventosRecentes = listEventosRecentes.EventosRecentes.length;
+						    
+						    $("#home").panel("open");
+						    
+						}
+						
+						if(listEventosRecentes.EventosRecentes.length == 0){
+						    //$("#btHome").fadeOut(500);
+						    $("#btHome").buttonMarkup({ theme: "a" });
+						    //$("#btHome").fadeIn(500);
+						    qtdEventosRecentes = 0;
+						}
+				    }
+					
+				},
+				error: function(){
+				}
+			});				    
+			    
+			}	
+			
+			
+
+							
+			
+			
+    
+    </script>
+	
+	
+	<body>
+	
+	<!-- Page starts here -->
+	<div data-role="page" data-theme="a" id="page1">
+	
+		<!-- menu -->
+		<div id="menu_"></div>
+		
+		<div data-role="content" id="contentMain" name="contentMain">
+		
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+			
+				<form id="form1">
+				
+					<table width="100%">
+						<tr>
+							<td style="width: 15%"><img src="img/logo_512_a60.jpg" hspace="10" width="128px"></td>
+							<td style="width: 85%"><h4><div id="lbUsuario"/></h4></td>
+						</tr>
+					</table>				
+					
+					<!-- <object name="placa" type="text/html" data="placa_inc.html" width="100%" height="180"></object> -->
+					
+					<!-- <div class="ui-grid-a">
+					    <div class="ui-block-a"><label for="placa_ltr"><h3>Placa:</h3></label></div>
+					    <div class="ui-block-b" style="text-align: right;" id="btnLimpar"><label><a id="linkLimpar" href="#">LIMPAR</a></label></div>
+					</div>/grid-a
+					
+					<table>
+						<tr>
+							<td style="width: 45%"><input style="font-size: 30px" id="placa_ltr" name="placa_ltr_r" type="text" class="ui-bar-c" value="" maxlength="3"/></td>
+							<td><h1>-</h1></td>
+							<td style="width: 55%"><input style="font-size: 30px" id="placa_num" name="placa_num_r" type="number" class="ui-bar-c" value="" maxlength="4"/></td>
+						</tr>
+					</table>					
+					
+					<p><h3>Eventos:</h3></p>
+						
+					<div id="divEventos">
+					<fieldset data-role="controlgroup" id="evento">
+					</fieldset>
+					</div>
+					
+					<p align="right">						
+						<input type="submit" value="&nbsp;&nbsp;&nbsp;E n v i a r&nbsp;&nbsp;&nbsp;" data-inline="true" data-theme="b"/>			
+					</p> -->					
+					
+				</form>
+				
+				<form action="upload" id="upload" method="post" enctype="multipart/form-data">
+					<label>Título:
+					<input name="titulo" type="text" id="titulo" size="50"/></label>
+					
+					<label>Descrição:
+					<textarea name="descricao" cols="50" rows="10" id="descricao"></textarea></label>
+					
+					<label>Escolher imagem<br>
+					<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
+					<input type="file" multiple="multiple" name="file[]" /><br /></label>
+					
+
+					
+					<div align="center">
+						<input type="submit" name="Submit" value="OK" />
+					</div>
+				</form> 				
+						
+			</div>
+			
+			
+		
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div>Por favor, preencha todos os campos obrigatórios.</div>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true">OK</a>
+		</div>		
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2" >
+			<div align="center"><img src="img/logo_512_a60.jpg" width="150px"></div>
+			<br/><div id="msgServer" style="font-size: 20px;height: 100%"></div><br/>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true">&nbsp;&nbsp;OK&nbsp;&nbsp;</a><br/>
+		</div>
+		
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->
+		
+		<div data-role="content" id="contentViewEventoRecente" name="contentViewEventoRecente">
+			<div align="CENTER"><h4>Evento Recente</h4></div>
+			    <p>
+			    	<div id="eventoRecenteContent" class="ui-body ui-body-a ui-corner-all"></div><br>
+					O evento realmente ocorreu?
+					
+					<table style="width: 100%">
+						<tr>
+							<td colspan="2" style="width: 100%"><a id="arquivarPositivo" href="#page1" data-role="button" data-rel="popup" data-position-to="window" data-transition="pop" data-theme="b" style="font-size: 20px">SIM</a></td>
+						</tr>
+						<tr>
+						<td style="width: 30%"><a id="arquivarNegativo" href="#page1" data-role="button" data-rel="popup" data-position-to="window" data-transition="pop">NÃO</a></td>
+							<td style="width: 70%"><a id="aindaNaoVi" href="#page1" data-role="button" data-rel="popup" data-position-to="window" data-transition="pop">AINDA NÃO VI</a></td>
+						</tr>						
+					</table>									
+					
+			    </p>
+		</div>		
+		
+		<!-- <div data-role="popup" id="popupViewEventoRecente" class="ui-corner-all">
+		
+			<div class="ui-corner-all custom-corners">
+			  <div class="ui-bar ui-bar-a">
+			    <h3>Evento Recente</h3>
+			  </div>
+			  <div class="ui-body ui-body-a">
+			    <p>
+			    	<div id="eventoRecenteContent" class="ui-body ui-body-a ui-corner-all"></div><br>
+					O evento realmente ocorreu?
+					
+					<table style="width: 100%">
+						<tr>
+							<td style="width: 30%"><a id="arquivarNegativo" href="#page1" data-role="button" data-rel="popup" data-position-to="window" data-transition="pop">NÃO</a></td>
+							<td style="width: 70%"><a id="arquivarPositivo" href="#page1" data-role="button" data-rel="popup" data-position-to="window" data-transition="pop" data-theme="b">SIM</a></td>
+						</tr>
+					</table>									
+					
+			    </p>
+			  </div>
+			</div>							
+		</div> -->						
+
+	</div> <!-- page1 -->
+　
+<!-- Page ends here -->
+</body>
+
+			<script>
+				/**************** FORMULARIO *****************/
+				
+				// Global declarations - assignments made in $(document).ready() below
+				var hdrMainvar = null;
+				var contentMainVar = null;
+				var ftrMainVar = null;
+				var contentTransitionVar = null;
+				var form1var = null;
+				var confirmationVar = null;
+				var contentDialogVar = null;
+				var contentDialog2Var = null;
+				var hdrConfirmationVar = null;
+				var contentConfirmationVar = null;
+				var ftrConfirmationVar = null;
+				var inputMapVar = null;
+				// Constants
+				var MISSING = "missing";
+				var EMPTY = "";
+				var NO_STATE = "ZZ";
+				
+				var isManterConectado;
+				
+				/**************** FORMULARIO *****************/
+			</script>
+
+			<script>
+			
+				$(document).ready(
+					function() {
+
+						// Assign global variables
+						hdrMainVar = $('#hdrMain');
+						contentMainVar = $('#contentMain');
+						ftrMainVar = $('#ftrMain');
+						contentTransitionVar = $('#contentTransition');
+						form1Var = $('#form1');
+						confirmationVar = $('#confirmation');
+						contentDialogVar = $('#contentDialog');
+						contentDialog2Var = $('#contentDialog2');
+						hdrConfirmationVar = $('#hdrConfirmation');
+						contentConfirmationVar = $('#contentConfirmation');
+						ftrConfirmationVar = $('#ftrConfirmation');
+						inputMapVar = $('input[name*="_r"]');
+						hideContentDialog();
+						hideContentDialog2();
+						hideContentTransition();
+						hideConfirmation();
+						
+					});
+				
+				$('#buttonOK').click(
+					function() {
+						hideContentDialog();
+						showMain();
+						return false;
+					});
+				
+				$('#buttonOK2').click(
+					function() {
+						hideContentDialog2();
+						showMain();
+						return false;
+					});			
+				
+/* 				$('#form1').submit(
+					function() {
+					    return submeter();
+					});
+				
+					function submeter(){
+						var err = false;
+						// Hide the Main content
+						hideMain();
+						
+						// Reset the previously highlighted form elements
+						inputMapVar.each(
+							function(index){
+									$(this).prev().removeClass(MISSING);
+							});
+						
+						// Perform form validation
+						inputMapVar.each(
+							function(index){
+								if($(this).val()==null || $(this).val()==EMPTY){
+									$(this).prev().addClass(MISSING);
+									err = true;
+								}
+							});
+	
+						// If validation fails, show Dialog content
+						if(err == true){
+							showContentDialog();
+							return false;
+						}
+	
+						// If validation passes, show Transition content
+						showContentTransition();
+						
+					    var allVals = [];
+					     $('#divEventos :checked').each(function() {
+					       allVals.push($(this).val());
+					     });
+							
+						$.ajax({
+							type: 'POST',
+							data: {"placa" : $('#placa_ltr').val() + $('#placa_num').val(),"iduser" : iduser_,"eventos" : allVals},
+							url: 'http://'+host+'/herbiee/public/informar',
+							dataType: 'json',
+							success: function(data){
+								
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append("Obrigado pela sua contribuição!<br/><br/> Seu alerta foi enviado com sucesso.<br/>");
+							    
+							    showContentDialog2(data);
+								
+							},
+							error: function(data){
+								
+								//alert(data.responseText);
+							    
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append(formatarMsgErro(data.responseText));
+							    
+							    showContentDialog2(data);
+							    
+							}
+						});
+	
+						return false;				    
+					} */ 
+					
+					$('#upload').submit(
+							function() {
+							    return submeter();
+							});
+					
+							function transferComplete(data){
+								
+							    hideMain();
+							    
+							    hideContentTransition();
+							    
+							    $("#msgServer").empty();
+							    $("#msgServer").append("Suas imagens foram enviadas com sucesso.<br/>");
+							    
+							    showContentDialog2(data);								
+								
+								console.log(data.currentTarget.response);
+							}					
+						
+							function submeter(){
+								var err = false;
+								// Hide the Main content
+								hideMain();
+								
+								// Reset the previously highlighted form elements
+								inputMapVar.each(
+									function(index){
+											$(this).prev().removeClass(MISSING);
+									});
+								
+								// Perform form validation
+								inputMapVar.each(
+									function(index){
+										if($(this).val()==null || $(this).val()==EMPTY){
+											$(this).prev().addClass(MISSING);
+											err = true;
+										}
+									});
+			
+								// If validation fails, show Dialog content
+								if(err == true){
+									showContentDialog();
+									return false;
+								}
+			
+								// If validation passes, show Transition content
+								showContentTransition();
+								
+								var form = document.getElementById('upload');
+								var request = new XMLHttpRequest();
+								
+								//e.preventDefault();
+								var formdata = new FormData(form);
+								
+								request.open('post','upload');
+								request.addEventListener('load', transferComplete);
+								request.send(formdata);
+				
+								return false;				    
+							}					
+	
+					function hideMain(){
+						hdrMainVar.hide();
+						contentMainVar.hide();
+						ftrMainVar.hide();
+					}
+	
+					function showMain(){
+						hdrMainVar.show();
+						contentMainVar.show();
+						ftrMainVar.show();
+					}
+	
+					function hideContentTransition(){
+						contentTransitionVar.hide();
+					}
+	
+					function showContentTransition(){
+						contentTransitionVar.show();
+					}
+	
+					function hideContentDialog(){
+						contentDialogVar.hide();
+					}
+					
+					function hideContentDialog2(){
+						contentDialog2Var.hide();
+					}				
+	
+					function showContentDialog(){
+						contentDialogVar.show();
+					}
+					
+					function showContentDialog2(data){
+						contentDialog2Var.show();
+					}				
+	
+					function hideConfirmation(){
+						hdrConfirmationVar.hide();
+						contentConfirmationVar.hide();
+						ftrConfirmationVar.hide();
+					}
+	
+					function showConfirmation(){
+						hdrConfirmationVar.show();
+						contentConfirmationVar.show();
+						ftrConfirmationVar.show();
+					}
+			</script>
+
+</html>

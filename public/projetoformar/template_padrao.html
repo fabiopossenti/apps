@@ -1,0 +1,135 @@
+<html>
+
+<head>
+	<meta charset="utf-8" />
+</head>
+
+<style>
+
+	.ui-panel-inner {
+		padding: 0px; 
+	}
+	
+	input[type=number]::-webkit-inner-spin-button, 
+	input[type=number]::-webkit-outer-spin-button { 
+  		-webkit-appearance: none; 
+  		margin: 0; 
+	}	
+
+</style>
+
+		<div data-role="panel" id="menu" data-position="left" data-display="push" data-dismissible="true" style="background-color: #33B5E5;padding: 0px">
+			
+			<div><img src="img/fundo_menu.png" style="width: 100%; height: 100px"></div>
+			<div><img src="img/user.png" style="margin-left:5px; width: 40px;position: absolute; top: 10px;"></div>
+			<div id="emailUsuario" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 80px;" ></div>			
+			<div style="margin: 5px">
+				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="redirecionarTela(4)" style="text-align: left;">Home</a>			
+				<a data-role="button" data-position-to="window" href="#" style="text-align: left;" data-theme="b">Cadastros</a>
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="redirecionarTela(1)" style="text-align: left;" >Tipo de Fornecedor</a>
+				<a data-role="button" data-icon="plus" data-position-to="window" href="#" onclick="redirecionarTela(3)" style="text-align: left;" >Fornecedor</a>
+				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="redirecionarTela(2)" style="text-align: left;">Sair</a>
+			</div>
+			
+		</div>
+		<!-- menu  -->
+		
+		<!-- home -->
+		<div data-role="panel" id="home" data-position="right" data-display="push" data-dismissible="true" data-theme="a" style="background-color: #a50a0c;padding: 0px">
+			
+				<div><img src="img/fundo_eventos.png" style="width: 100%; height: 100px"></div>
+				
+				<div style="margin: 5px">
+					  
+					  <div class="ui-corner-all" align="center">
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					  </div>
+					  
+					  <br/>
+					  
+					  <ul id="eventoRecente" data-inset="true" data-role="listview">
+					  </ul>
+					  
+				</div>
+			
+		</div>
+		<!-- home  -->		
+		
+		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
+			<h1 id="tituloPagina">Projeto FORMAR</h1>
+			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
+			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
+		</div>
+		
+		<!-- contentMain -->
+		<div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<br/>
+			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacaoExclusao" name="contentDialogConfirmacaoExclusao">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="50%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmarExclusao()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao1" name="contentDialogConfirmacao1">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_1" style="font-size: 20px"></div>
+				<table width="0%" style="padding: 10px">
+					<tr>
+						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="33%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" onclick="recusar1()" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
+						<td width="33%" align="left"><a id="buttonSim" name="buttonSim" onclick="confirmar1()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>		
+		
+		<div align="CENTER" data-role="content" id="contentDialogConfirmacao2" name="contentDialogConfirmacao2">
+			<div data-role="header" data-nobackbtn="false">
+				<h1>Projeto FORMAR</h1>
+			</div>
+			<br/>		
+			<div id="msgServer_2" style="font-size: 20px"></div>
+				<table width="100%" style="padding: 10px">
+					<tr>
+						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
+						<td width="50%" align="left"><a id="buttonSim2" name="buttonSim2" onclick="confirmar2()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Sim</a></td>
+					</tr>
+				</table>			
+		</div>					
+		
+		<!-- contentDialog -->
+		<!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+		<div data-role="content" id="contentTransition" name="contentTransition">
+			<div align="CENTER"><h4>Aguarde por favor...</h4></div>
+			<div align="CENTER"><img id="spin" name="spin" src="img/progress_bar.gif"/></div>
+		</div> <!-- contentTransition -->
+
+</html>

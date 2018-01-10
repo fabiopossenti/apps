@@ -1,0 +1,97 @@
+<html>
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">		
+		
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery-migrate-1.2.1.min.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+		<script src="js/jquery.mobile-1.4.0.min.js"></script>
+		
+		<script src="js/herbiee.js"></script>
+		</head>
+		
+    <script>
+    
+	$(document).ready(
+			function() {
+			    
+			    $('#btnLimpar').hide();
+			    
+				$('#btnLimpar').click(
+						function() {
+							$('#placa_ltr').val("");
+							$('#placa_num').val("");
+							$('#btnLimpar').hide();
+							$('#placa_ltr').focus();
+				});
+
+ 				$('#placa_ltr').on( "keyup", function(e) {
+ 					
+ 					if($('#placa_ltr').val().length > 0){
+ 						$('#btnLimpar').show();
+ 						$('#placa_ltr').val($('#placa_ltr').val().toUpperCase());
+ 					}else
+ 						$('#btnLimpar').hide();
+ 					
+ 					if($('#placa_ltr').val().length == 1 && $.isNumeric($('#placa_ltr').val().substr(0,1)))
+ 						$('#placa_ltr').val("")
+
+ 					if($('#placa_ltr').val().length == 2 && $.isNumeric($('#placa_ltr').val().substr(1,2)))
+ 						$('#placa_ltr').val($('#placa_ltr').val().substr(0,1)) 						
+ 						
+ 					if($('#placa_ltr').val().length == 3 && $.isNumeric($('#placa_ltr').val().substr(2,1)))
+ 						$('#placa_ltr').val($('#placa_ltr').val().substr(0,2))
+ 						
+ 					if($('#placa_ltr').val().length >= 3){
+ 						$('#placa_ltr').val($('#placa_ltr').val().substr(0,3));
+ 						$('#placa_num').focus();
+ 					} 						
+
+				} );
+ 				
+				$('#placa_num').on( "keyup", function(e) {
+ 					
+ 					if($('#placa_num').val().length == 1 && !$.isNumeric($('#placa_num').val().substr(0,1)))
+ 						$('#placa_num').val("");
+ 						
+ 					if($('#placa_num').val().length == 2 && !$.isNumeric($('#placa_num').val().substr(1,2)))
+ 						$('#placa_num').val($('#placa_num').val().substr(0,1)); 						
+ 					
+ 					if($('#placa_num').val().length == 3 && !$.isNumeric($('#placa_num').val().substr(2,3)))
+ 						$('#placa_num').val($('#placa_num').val().substr(0,2)); 					
+ 					
+ 					if($('#placa_num').val().length == 4 && !$.isNumeric($('#placa_num').val().substr(3,4)))
+ 						$('#placa_num').val($('#placa_num').val().substr(0,3));
+ 						
+ 					if($('#placa_num').val().length >= 4){
+ 						$('#placa_num').val($('#placa_num').val().substr(0,4));
+ 						$('#linkLimpar').focus();
+ 					}
+ 					 
+				} ); 				
+ 				
+
+			});
+    
+    </script>		
+		
+		<body>
+
+					<div class="ui-grid-a">
+					    <div class="ui-block-a"><label for="placa_ltr"><h3>Placa:</h3></label></div>
+					    <div class="ui-block-b" style="text-align: right;" id="btnLimpar"><label><a id="linkLimpar" href="#">LIMPAR</a></label></div>
+					</div><!-- /grid-a -->
+					
+					<table>
+						<tr>
+							<td style="width: 45%"><input style="font-size: 40px" id="placa_ltr" name="placa_ltr" type="text" class="ui-bar-c" value="" maxlength="3"/></td>
+							<td><h1>-</h1></td>
+							<td style="width: 55%"><input style="font-size: 40px" id="placa_num" name="placa_num" type="number" class="ui-bar-c" value="" maxlength="4"/></td>
+						</tr>
+					</table>
+					
+		</body>
+</html>
