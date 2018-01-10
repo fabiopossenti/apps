@@ -4,7 +4,7 @@ class FornecedorController extends Controller {
     
     public function cadastrar(){        
         
-        $midiaController = new MidiaController();
+        $midiaController = new MidiaController(); //inicia controller
         $iduser = Input::get('iduser');
         $email = Input::get('email');
         $app = Input::get('app');
