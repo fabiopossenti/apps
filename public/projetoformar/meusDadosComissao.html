@@ -74,7 +74,7 @@
 		<!-- home  -->		
 		
 		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
-			<h1 id="tituloPagina">Projeto FORMAR <br/> Meus Dados</h1>
+			<h1 id="tituloPagina">Projeto FORMAR <br/> Dados da Comissão</h1>
 			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
 			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
 		</div>
@@ -184,16 +184,6 @@
 							<label for="curso"><b>Curso:</b></label>
 							<input id="curso" name="curso_r" maxlength="200" type="text" class="ui-bar-c" value=""/>
 						</p>						
-						
-						<p>
-							<label for="emailPresidente"><b>E-mail Presidente:</b></label>
-							<input id="emailPresidente" name="emailPresidente_r" maxlength="200" type="email" class="ui-bar-c" value=""/>
-						</p>						
-						
-						<p>
-							<label for="emailVicePresidente"><b>E-mail Vice-Presidente:</b></label>
-							<input id="emailVicePresidente" name="emailVicePresidente_r" maxlength="200" type="email" class="ui-bar-c" value=""/>
-						</p>						
 
 						<p>
 							<label for="telefone"><b>Telefone:</b></label>
@@ -202,7 +192,18 @@
 						
 						<label>Escolher imagem<br>
 						<input type="hidden" name="MAX_FILE_SIZE" value="1000000" />
-						<input type="file" id="file" name="file" accept="image/png, image/jpeg"/><br /></label>	
+						<input type="file" id="file" name="file" accept="image/png, image/jpeg"/><br /></label>
+						
+						<p>
+							<label for="tipoMembro1"><b>Participante 1:</label>
+							<select name="tipoMembro1" id="tipoMembro1" data-native-menu="false" style="text-align: left !important">
+							<option>Selecione</option>								
+							<option value="1">Participante</option>
+							<option value="2">Presidente</option>
+							<option value="3">Vice-Presidente</option>
+							</select>
+							<input id="membro1" name="membro1_r" maxlength="200" type="email" class="ui-bar-c" value="" placeholder="digite um e-mail..."/>
+						</p>						
 						
 						<table width="100%">
 							<tr>
@@ -275,8 +276,6 @@
 					$("#nome").val('');
 					$("#instituicao").val('');
 					$("#curso").val('');
-					$("#emailPresidente").val('');
-					$("#emailVicePresidente").val('');
 					$("#telefone").val('');
 					$("#file").val('');
 					$("#flexcluir").val(null);
@@ -443,8 +442,6 @@
 					$("#nome").val(nome);
 					$("#instituicao").val(instituicao);
 					$("#curso").val(curso);
-					$("#emailPresidente").val(emailPresidente);
-					$("#emailVicePresidente").val(emailVicePresidente);
 					$("#telefone").val(telefone);
 					$("#file").val('');
 					$("#midia").empty();
