@@ -86,6 +86,9 @@ class UsuarioController extends Controller {
 		$confirmation = Input::get('confirmation');
 		$app = Input::get('app');
 		$perfis = Input::get('perfil');
+		//$comissao = Input::get('comissao');
+		$fornecedor = Input::get('fornecedor');
+		$tipoMembro = Input::get('tipo');
 		
 		$iduser = Input::get('iduser');
 		
@@ -205,8 +208,20 @@ class UsuarioController extends Controller {
 											409);
 							}				
 							
-						}					    
-					    
+						}
+						
+						/*if($comissao != null){
+						    $membro = new ComissaoMembros();
+	                        $membro->id_comissao = $comissao;
+	                        $membro->email = $email;
+	                        $membro->tipo = $tipoMembro;	                        
+							try{
+								 $membro->save();
+							}catch(Exception $e) {
+								return Response::json(array(utf8_encode('Comissão inválida!')), 409);
+							}	                        
+						}*/	
+						
 		    			return Response::json(array('_token' => csrf_token(),
 		    			    'usuario' => $user->toArray()
 							),200);
@@ -255,29 +270,29 @@ class UsuarioController extends Controller {
     				}
 				}
 				
-				
-				    if($iduser != null){
-				        $usuarioConvite = UsuarioConvite::where('id_usuario','=',$iduser)->where('email_convidado','=',$email)->
-					                       where('app','=',$app)->first();
-				        if($usuarioConvite != null){
-				            $usuarioConvite->situacao = 1;
-				            $usuarioConvite->update();
-			            
-					        try{
-					            $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/login.html";
-					            Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$email." aceitou seu convite. Clique no link abaixo para visualizar.",'link' => $actual_link), function($message)
-						        {
-						            $usuarioSolicitante = Usuario::where('id_usuario','=',Input::get('iduser'))->first();
-						            $message->to($usuarioSolicitante->email,$usuarioSolicitante->email)->subject(utf8_encode('Seu convite de amizade foi aceito.'));
-						        });
-					        }catch(Exception $e) {
-					            Log::info('Erro ao enviar e-mail');
-					        }			            
-			            
-				        }/* else{
-				            return Response::json(array(utf8_encode('Convite inexistente!')), 409);
-				        } */
-				    }
+			    if($iduser != null){
+			        $usuarioConvite = UsuarioConvite::where('id_usuario','=',$iduser)->where('email_convidado','=',$email)->
+				                       where('app','=',$app)->first();
+			        if($usuarioConvite != null){
+			            $usuarioConvite->situacao = 1;
+			            $usuarioConvite->update();
+		            
+				        try{
+				            $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/login.html";
+				            Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$email." aceitou seu convite. Clique no link abaixo para visualizar.",'link' => $actual_link), function($message)
+					        {
+					            $usuarioSolicitante = Usuario::where('id_usuario','=',Input::get('iduser'))->first();
+					            $message->to($usuarioSolicitante->email,$usuarioSolicitante->email)->subject(utf8_encode('Seu convite de amizade foi aceito.'));
+					        });
+				        }catch(Exception $e) {
+				            Log::info('Erro ao enviar e-mail');
+				        }			            
+		            
+			        }/* else{
+			            return Response::json(array(utf8_encode('Convite inexistente!')), 409);
+			        } */
+			    }
+			    
 			}catch(Exception $e) {
 				Log::info('Erro ao salvar');
 			
@@ -327,6 +342,31 @@ class UsuarioController extends Controller {
 				
 			}
 			
+			/*if($comissao != null){
+			    $membro = new ComissaoMembros();
+                $membro->id_comissao = $comissao;
+                $membro->email = $email;
+                $membro->tipo = $tipoMembro;
+				try{
+					 $membro->save();
+				}catch(Exception $e) {
+					return Response::json(array(utf8_encode('Comissão inválida!')), 409);
+				}
+			}*/
+			
+			if($fornecedor != null){
+			    
+			    try{
+			         $forn = Fornecedor::where('id_fornecedor','=',$fornecedor)->firstOrFail();
+			         if($forn->id_usuario == null){
+			             $forn->id_usuario = $usuario->id_usuario;
+			             $forn->update();
+			         }
+			    }catch(Exception $e) {
+			        return Response::json(array(utf8_encode('Fornecedor inválido!')), 409);
+			    }
+			}
+			
 			DB::commit();
 			
 			return Response::json(array('_token' => csrf_token(),
@@ -335,7 +375,7 @@ class UsuarioController extends Controller {
 		
 		}else{
 			
-			return Response::json(array(utf8_encode('Email Inválido!')),401);
+			return Response::json(array(utf8_encode('E-mail Inválido!')),401);
 			
 		}
 		
@@ -433,7 +473,7 @@ class UsuarioController extends Controller {
 		
 		}else{
 
-			return Response::json(array(utf8_encode('Email Inválido!')),401);
+			return Response::json(array(utf8_encode('E-mail Inválido!')),401);
 			
 		}
 		

@@ -45,6 +45,7 @@
 			<div style="margin: 5px">
 				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="$(window).attr('location', 'homeFornecedor.html');" style="text-align: left;">Home</a>			
 				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="$(window).attr('location', 'meusDadosFornecedor.html');" style="text-align: left;background-color: yellow" >Meus Dados</a>
+				<a data-role="button" data-icon="search" data-position-to="window" href="#" onclick="$(window).attr('location', 'buscarComissaoFornecedor.html');" style="text-align: left" >Buscar Comissão</a>
 				<a data-role="button" data-icon="gear" data-position-to="window" href="#" onclick="$(window).attr('location', 'selecionarPerfil.html?ok=1');" style="text-align: left;">Perfil</a>			
 				<a data-role="button" data-icon="power" data-position-to="window" href="#" onclick="$(window).attr('location','login.html?frommenu=1');" style="text-align: left;">Sair</a>
 			</div>
@@ -60,7 +61,7 @@
 				<div style="margin: 5px">
 					  
 					  <div class="ui-corner-all" align="center">
-					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Notificações</b></font>
 					  </div>
 					  
 					  <br/>
@@ -74,7 +75,7 @@
 		<!-- home  -->		
 		
 		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
-			<h1 id="tituloPagina">Projeto FORMAR <br/> Dados do Fornecedor</h1>
+			<h1 id="tituloPagina" style="margin: 0">Projeto FORMAR <br/> Dados do Fornecedor</h1>
 			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
 			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
 		</div>
@@ -85,7 +86,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -95,7 +96,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -105,7 +106,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer2" style="font-size: 20px"></div>
+			<div id="msgServer2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
@@ -119,7 +120,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_1" style="font-size: 20px"></div>
+			<div id="msgServer_1" style="font-size: 20px;padding: 1em"></div>
 				<table width="0%" style="padding: 10px">
 					<tr>
 						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -134,7 +135,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_2" style="font-size: 20px"></div>
+			<div id="msgServer_2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -172,6 +173,11 @@
 							<option>Selecione</option>								
 							</select>
 							
+						</p>
+						
+						<p>
+							<input type="checkbox" value="1" id="cerimonial" name="cerimonial"/>
+							<label for="cerimonial">Cerimonial</label>
 						</p>
 						
 						<p>
@@ -312,6 +318,7 @@
 					$("#identificacao").val('');
 					$("#endereco").val('');
 					$("#telefone").val('');
+					$('#cerimonial').prop("checked", false).checkboxradio('refresh');
 					$("#tipoFornecedor").val(null);
 					$('#tipoFornecedor').selectmenu('refresh');
 					$("#file").val('');
@@ -484,7 +491,7 @@
 					
 					$.ajax({
 						type : 'GET',
-						url : "/apps/public/obterFornecedor/"+email_+"/"+iduser_+"/projetoformar/"+perfil_,
+						url : "/apps/public/obterFornecedor/"+email_+"/"+iduser_+"/projetoformar/"+perfil_+"/0/0",
 						dataType : 'json',
 						success : function(data) {
 							if (data.status == true) {
@@ -494,7 +501,7 @@
 										list.Fornecedor[0].nomeTipoFornecedor = "";
 									//alert(list.Fornecedor[0].id_tipo_fornecedor);
 									editar(list.Fornecedor[0].id_fornecedor,list.Fornecedor[0].nome,list.Fornecedor[0].identificacao,
-											list.Fornecedor[0].endereco,list.Fornecedor[0].telefone,list.Fornecedor[0].id_tipo_fornecedor,list.Fornecedor[0].caminho_midia,getDescSituacao(list.Fornecedor[0].situacao));
+											list.Fornecedor[0].endereco,list.Fornecedor[0].telefone,list.Fornecedor[0].id_tipo_fornecedor,list.Fornecedor[0].caminho_midia,list.Fornecedor[0].cerimonial,getDescSituacao(list.Fornecedor[0].situacao));
 								}
 	
 							}
@@ -508,7 +515,7 @@
 					$.mobile.loading("hide");
 				}
 				
-				function editar(id, nome, identificacao, endereco, telefone, tipoFornecedor, caminho_midia, situacao){
+				function editar(id, nome, identificacao, endereco, telefone, tipoFornecedor, caminho_midia, cerimonial, situacao){
 					
 					$('#formulario').css('background-color','#F4FF81');
 					$('#btnCadastrar').hide();
@@ -522,6 +529,10 @@
 					$("#identificacao").val(identificacao);
 					$("#endereco").val(endereco);
 					$("#telefone").val(telefone);
+					if(cerimonial == 1)
+						$('#cerimonial').prop("checked", true).checkboxradio('refresh');
+					else
+						$('#cerimonial').prop("checked", false).checkboxradio('refresh');					
 					$("#file").val('');
 					$('#tipoFornecedor').val(tipoFornecedor);
 					$('#tipoFornecedor').selectmenu('refresh');
@@ -529,6 +540,8 @@
 					if(caminho_midia != null){
 						$("#midia").append('<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'uploads/' + 
 								caminho_midia + '\') center center / 200%;"/>');
+					}else{
+						$("#midia").append('<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'img/semfoto.jpg\') center center / 100%;"/>');						
 					}
 					$('#situacao').val(situacao);
 					$("#situacao").css('background-color','#f4ff81');

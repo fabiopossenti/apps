@@ -67,7 +67,7 @@
 				<div style="margin: 5px">
 					  
 					  <div class="ui-corner-all" align="center">
-					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Notificações</b></font>
 					  </div>
 					  
 					  <br/>
@@ -81,7 +81,7 @@
 		<!-- home  -->		
 		
 		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
-			<h1 id="tituloPagina">Projeto FORMAR <br/> Cadastro de Fornecedor</h1>
+			<h1 id="tituloPagina" style="margin: 0">Projeto FORMAR <br/> Cadastro de Fornecedor</h1>
 			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
 			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
 		</div>
@@ -92,7 +92,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -102,7 +102,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -112,7 +112,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer2" style="font-size: 20px"></div>
+			<div id="msgServer2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
@@ -126,7 +126,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_1" style="font-size: 20px"></div>
+			<div id="msgServer_1" style="font-size: 20px;padding: 1em"></div>
 				<table width="0%" style="padding: 10px">
 					<tr>
 						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -141,7 +141,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_2" style="font-size: 20px"></div>
+			<div id="msgServer_2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -181,6 +181,11 @@
 							</select>
 							
 						</p>
+						
+						<p>
+							<input type="checkbox" value="1" id="cerimonial" name="cerimonial"/>
+							<label for="cerimonial">Cerimonial</label>
+						</p>						
 						
 						<p>
 							<label for="nome"><b>Nome:</b></label>
@@ -316,6 +321,7 @@
 					$('input:radio[name="situacao"]').filter('[value="2"]').attr('checked', false).checkboxradio( "refresh" );
 					$('input:radio[name="situacao"]').filter('[value="1"]').attr('checked', true).checkboxradio( "refresh" );
 					$("#telefone").val('');
+					$('#cerimonial').prop("checked", false).checkboxradio('refresh');
 					$("#emailV").val('');
 					$("#emailV").attr('readonly',false);
 					$("#emailV").css('background-color','white');
@@ -484,7 +490,7 @@
 					
 					$.ajax({
 						type : 'GET',
-						url : "/apps/public/obterFornecedor/"+email_+"/"+iduser_+"/projetoformar/3",
+						url : "/apps/public/obterFornecedor/"+email_+"/"+iduser_+"/projetoformar/3/0/0",
 						dataType : 'json',
 						success : function(data) {
 							if (data.status == true) {
@@ -497,7 +503,7 @@
 										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'uploads/' + 
 												list.Fornecedor[i].caminho_midia + '\') center center / 200%;"/>';
 									}else{
-										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;"/>';
+										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'img/semfoto.jpg\') center center / 100%;"/>';
 									}
 									if(list.Fornecedor[i].nomeTipoFornecedor == null)
 										list.Fornecedor[i].nomeTipoFornecedor = "";
@@ -519,7 +525,8 @@
 											list.Fornecedor[i].telefone+'\','+
 											list.Fornecedor[i].id_tipo_fornecedor+',\''+
 											list.Fornecedor[i].caminho_midia+'\','+
-											list.Fornecedor[i].situacao+',\''+
+											list.Fornecedor[i].situacao+','+
+											list.Fornecedor[i].cerimonial+',\''+
 											(list.Fornecedor[i].email != null ? list.Fornecedor[i].email : '')+
 											'\');">'+
 												'<a href="#">'+
@@ -597,7 +604,7 @@
 						return "N/A";
 				}
 				
-				function editar(id, nome, identificacao, endereco, telefone, tipoFornecedor, caminho_midia, situacao, email){
+				function editar(id, nome, identificacao, endereco, telefone, tipoFornecedor, caminho_midia, situacao, cerimonial, email){
 					
 					resetar();
 					
@@ -613,6 +620,11 @@
 					$("#identificacao").val(identificacao);
 					$("#endereco").val(endereco);
 					$("#telefone").val(telefone);
+					$("#telefone").val(telefone);
+					if(cerimonial == 1)
+						$('#cerimonial').prop("checked", true).checkboxradio('refresh');
+					else
+						$('#cerimonial').prop("checked", false).checkboxradio('refresh');
 					$('input:radio[name="situacao"]').filter('[value="0"]').attr('checked', false).checkboxradio( "refresh" );
 					$('input:radio[name="situacao"]').filter('[value="1"]').attr('checked', false).checkboxradio( "refresh" );
 					$('input:radio[name="situacao"]').filter('[value="2"]').attr('checked', false).checkboxradio( "refresh" );

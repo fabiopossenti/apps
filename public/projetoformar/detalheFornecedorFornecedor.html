@@ -12,6 +12,9 @@
 		<script src="js/jquery.mobile-1.4.0.min.js"></script>
 		
 		<script src="js/herbiee.js"></script>
+		
+		<link rel="stylesheet" href="css/jquery.rateyo.min.css"/>
+		<script src="js/jquery.rateyo.min.js"></script>	
 
         <title>Projeto FORMAR</title>        
 
@@ -43,14 +46,13 @@
 			<div id="emailUsuario" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 80px;" ></div>			
 			<div id="perfilSelecionado" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 100px;" ></div>
 			<div style="margin: 5px">
-				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="$(window).attr('location', 'homeAluno.html');" style="text-align: left;background-color: yellow">Home</a>
-				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="$(window).attr('location', 'meusDadosAluno.html');" style="text-align: left;" >Meus Dados</a>
-				<a data-role="button" data-icon="search" data-position-to="window" href="#" onclick="$(window).attr('location', 'buscarComissaoAluno.html');" style="text-align: left;" >Buscar Comissão</a>
+				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="$(window).attr('location', 'homeFornecedor.html');" style="text-align: left;">Home</a>
+				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="$(window).attr('location', 'meusDadosFornecedor.html');" style="text-align: left;" >Meus Dados</a>
+				<a data-role="button" data-icon="search" data-position-to="window" href="#" onclick="$(window).attr('location', 'buscarComissaoFornecedor.html');" style="text-align: left;" >Buscar Comissão</a>
 				<!-- <a id="menuBuscarFornecedor" data-role="button" data-icon="search" data-position-to="window" href="#" onclick="$(window).attr('location', 'buscarFornecedorAluno.html');" style="text-align: left" >Buscar Fornecedor</a> -->
 				<a data-role="button" data-icon="gear" data-position-to="window" href="#" onclick="$(window).attr('location', 'selecionarPerfil.html?ok=1');" style="text-align: left;">Perfil</a>			
 				<a data-role="button" data-icon="power" data-position-to="window" href="#" onclick="$(window).attr('location','login.html?frommenu=1');" style="text-align: left;">Sair</a>
 			</div>
-			
 		</div>
 		<!-- menu  -->
 		
@@ -76,7 +78,7 @@
 		<!-- home  -->		
 		
 		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
-			<h1 id="tituloPagina" style="margin: 0">Projeto FORMAR</h1>
+			<h1 id="tituloPagina" style="margin: 0">Projeto FORMAR <br/> Fornecedor</h1>
 			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
 			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
 		</div>
@@ -140,7 +142,7 @@
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
-						<td width="50%" align="left"><a id="buttonSim2" name="buttonSim2" onclick="$(window).attr('location', 'meusDadosAluno.html');" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Continuar</a></td>
+						<td width="50%" align="left"><a id="buttonSim2" name="buttonSim2" onclick="confirmarIngressoComissao()" data-role="button" data-inline="true" data-theme="b" style="width: 80px">Continuar</a></td>
 					</tr>
 				</table>			
 		</div>					
@@ -154,21 +156,17 @@
 
 		<div data-role="content" id="contentMain" name="contentMain">
 		
-			<div style="padding: 1em;background-color: #e9e9e9" class="ui-bar-c ui-corner-all ui-shadow">
-				<label for="grid"><b>Minhas Comissões:</b></label>
-				<ul id="grid" data-role="listview" data-filter-placeholder="Pesquisar..." data-inset="true">		
-				</ul>
-				<br/><p align="right"><a href="#" onclick="$(window).attr('location', 'buscarComissaoAluno.html');">Buscar Comissão</a></p>	
-			</div>
+			<div id="midia" style="background-color: white;height: 150px;margin-left: -1em;margin-top: -1em; margin-right: -1em; margin-bottom: 1em"></div>
+
+			<ul id="grid" data-role="listview" data-filter-placeholder="Pesquisar..." data-inset="true">		
+			</ul>
 			
-			<div style="padding: 1em">			
-				<label for="convite"><b>Convidar Amigos:</b></label>
-				<input id="convite" name="email_r" maxlength="200" placeholder="Informe um e-mail" type="email" class="ui-bar-c" value=""/>
-				<div width="100%" style="text-align: right;">
-					<input type="button" value="Convidar" data-inline="true" data-theme="a" onclick="convidarAmigo()"/>
-				</div>
-			</div>
-				
+			<table width="100%">
+				<tr>
+					<td style="width: 50%"><input id="btnVoltar" onclick="history.back()" type="button" value="Voltar" data-inline="true" data-theme="a"/></td>
+				</tr>
+			</table>
+			
 		</div>
 
 		<!-- contentMain -->
@@ -180,6 +178,9 @@
 			<script>
 			
 			 	var perfil_;
+			 	var idFornecedor;
+			 	var idComissao;
+			 	var nomeFornecedor;
 			
 				$(document).ready(
 						function() {
@@ -198,176 +199,124 @@
 								$(window).attr('location','login.html?frommenu=1');
 							}
 							
-							if(perfil_ != 1){
+							if(perfil_ != 2){
 								$(window).attr('location','login.html?frommenu=1');
 							}
 							
-							carregarComissoes();
+							//Recupera param get
+							(window.onpopstate = function () {
+							    var match,
+							        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+							        search = /([^&=]+)=?([^&]*)/g,
+							        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+							        query  = window.location.search.substring(1);
+		
+							    urlParams = {};
+							    while (match = search.exec(query))
+							       urlParams[decode(match[1])] = decode(match[2]);
+							})();
+							
+							if(urlParams.idFornecedor != null){
+								idFornecedor = urlParams.idFornecedor;
+								idComissao = urlParams.idComissao;
+							}
+							
+							carregar();
 						});
 			
-				function carregarComissoes() {
+				function carregar() {
 
 					$.mobile.loading("show");
 					
 					$.ajax({
 						type : 'GET',
-						url : "/apps/public/obterComissoes/"+email_+"/"+iduser_+"/projetoformar/"+perfil_+"/0",
+						url : "/apps/public/obterFornecedor/"+email_+"/"+iduser_+"/projetoformar/2/"+idComissao+"/"+idFornecedor,
 						dataType : 'json',
 						success : function(data) {
 							if (data.status == true) {
 								list = data;
 								$('#grid').empty();
-								for (i = 0; i < list.Comissao.length; i++) {									
+								//for (i = 0; i < list.Fornecedor.length; i++) {									
+									
 									var img = '<img src="#"/>';
-									if(list.Comissao[i].caminho_midia != null){
-										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'uploads/' + list.Comissao[i].caminho_midia + '\') center center / 200%;"/>';
+									if(list.Fornecedor[0].caminho_midia != null){
+										$('#midia').css('background','url(\'uploads/' + list.Fornecedor[0].caminho_midia + '\') center center / 100%');
+										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'uploads/' + 
+												list.Fornecedor[0].caminho_midia + '\') center center / 200%;"/>';
 									}else{
-										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'img/semfoto.jpg\') center center / 100%;"/>';
+										$('#midia').remove();
+										img = '<div style="position: relative;width: 100px;height: 100px;margin: -20px;"/>';
 									}
-									$('#grid').append('<li data-icon="info" onclick="irParaComissao('+list.Comissao[i].id_comissao+');">'+
-															'<a href="#">'+
-																'<table width="100%">'+
-																	'<tr>'+
-																		'<td align="left" width="100px" style="vertical-align: top">' + img + '</td>'+
-																		'<td align="left" style="margin-left: 5px">'+
-																			'<font color="black" size="3px" style="white-space: normal;">'+
-																				'<b>' + list.Comissao[i].nome + '</b><br/>'+
-																				'<font color="black" size="2px" style="white-space: normal;">'+list.Comissao[i].instituicao+'</font>'+
-																			'</font></td>'+
-																	'</tr>'+
-																	/* '<tr>'+															
-																		'<td colspan="2" align="left">'+
-																			'<font color="black" size="2px" style="white-space: normal;"><br/>' + list.Comissao[i].curso + '</font>'+
-																		'</td>'+
-																	'</tr>'+ */
-																'</table>'+
-															'</a>'+
-														'</li>');
+									if(list.Fornecedor[0].nomeTipoFornecedor == null)
+										list.Fornecedor[0].nomeTipoFornecedor = "";
+									
+									var color = "black";
+									if(list.Fornecedor[0].situacao == 0){
+										color = "orange";
+									}else if(list.Fornecedor[0].situacao == 1){
+										color = "black";
+									}else if(list.Fornecedor[0].situacao == 2){
+										color = "gray";
+									}
+									
+									$('#grid').append('<li>'+
+												//'<a href="#">'+
+													'<table width="100%">'+
+														'<tr>'+
+															'<td align="left" style="margin-left: 5px">'+
+																'<font color="black" size="5px" style="white-space: normal;">'+
+																	'<b>' + list.Fornecedor[0].nome + '</b><br/><div style="margin-left: -5px" id="rateYo_'+list.Fornecedor[0].id_fornecedor+'"></div>'+
+																	'<font color="black" size="2px" style="white-space: normal;">'+list.Fornecedor[0].nomeTipoFornecedor+'</font>'+
+																'</font></td>'+
+														'</tr>'+
+														'<tr>'+															
+															'<td align="left">'+
+																'<font color="black" size="2px" style="white-space: normal;"><br/>CPF/CNPJ: ' + list.Fornecedor[0].identificacao + '</font>'+
+															'</td>'+
+														'</tr>'+														
+														'<tr>'+															
+															'<td align="left">'+
+																'<font color="black" size="2px" style="white-space: normal;">' + list.Fornecedor[0].endereco + '</font>'+
+															'</td>'+
+														'</tr>'+														
+														'<tr>'+															
+															'<td align="left">'+
+																'<font color="black" size="3px" style="white-space: normal;">Telefone: ' + list.Fornecedor[0].telefone + '</font>'+
+															'</td>'+
+														'</tr>'+
+														'<tr>'+															
+														'<td align="left">'+
+															'<font color="'+color+'" size="3px" style="white-space: normal;">E-mail Vinculado: ' + (list.Fornecedor[0].email != null ? list.Fornecedor[0].email : 'N/A') + '</font>'+
+														'</td>'+
+														'</tr>'+
+													'</table>'+
+												//'</a>'+
+											'</li>');
+									
+									// TODO ---- REMOVER ISSO QUANDO AVALIAÇÃO OK
+									var randomnumber = Math.floor(Math.random() * (5 - 0 + 1)) + 0;  
+									
+									$("#rateYo_"+list.Fornecedor[0].id_fornecedor).rateYo({
+										    rating: randomnumber,
+										    fullStar: true,
+										    readOnly: true,
+										    normalFill: "#cccccc",
+										    ratedFill: "black",
+										    starWidth: "20px"
+									  });									
+									
 								}
 								$('#grid').listview("refresh");
 								$.mobile.loading("hide");
 	
-							}
+							//}
 	
 						},
 						error : function() {
 								$.mobile.loading("hide");
 						}
 					});
-				}				
-
-				function irParaComissao(id){
-					
-					$.mobile.loading("show");
-					
-					$.ajax({
-						type : 'GET',
-						url : "/apps/public/obterAluno/"+email_+"/"+iduser_+"/projetoformar/"+perfil_,
-						dataType : 'json',
-						success : function(data) {
-							if (data.status == true) {
-								list = data;
-								if(list.Aluno.length == 0){
-									
-									hideMain();
-
-									hideContentTransition();
-
-									$("#msgServer_2").empty();
-									$("#msgServer_2").append("É necessário preencher seus dados para acessar a Comissão.");
-
-									showContentDialogConfirmacao2();	
-									
-								}else{
-									
-									$(window).attr('location', 'detalheComissaoAluno.html?idComissao='+id);
-									
-								}
-
-								$.mobile.loading("hide");
-	
-							}
-	
-						},
-						error : function() {
-								$.mobile.loading("hide");
-						}
-					});					
-
 				}
-				
-				function convidarAmigo(){
-					
-					var err = false;
-					// Hide the Main content
-					hideMain();
-
-					// Reset the previously highlighted form elements
-					inputMapVar.each(function(index) {
-						$(this).prev().removeClass(MISSING);
-					});
-
-					// Perform form validation
-					inputMapVar.each(function(index) {
-						if ($(this).val() == null || $(this).val() == EMPTY) {
-							$(this).prev().addClass(MISSING);
-							err = true;
-						}
-					});
-
-					// If validation fails, show Dialog content
-					if (err == true) {
-						$("#msgServerErro").empty();
-						$("#msgServerErro").append("Por favor, preencha o e-mail.");					
-						showContentDialog();
-						return false;
-					}
-
-					// If validation passes, show Transition content
-					showContentTransition();
-					
-					$.mobile.loading("show");
-					
-					$.ajax({
-						type: 'POST',
-						data: {"iduser" : iduser_, "emailConvidado" : $('#convite').val(), "email" : email_, "app" : "projetoformar"},
-						url: '/apps/public/cadastrarUsuarioConvite',
-						dataType: 'json',
-						success: function(data){
-							
-						    hideMain();
-						    
-						    hideContentTransition();
-						    
-						    $("#msgServer").empty();
-						    $("#msgServer").append(data);
-						    
-						    $.mobile.loading("hide");
-						    
-						    showContentDialog2();
-						    
-						    $('#convite').val("");
-						    
-						    //carregarComissoes();
-						    
-						},
-						error: function(data){
-						    
-						    hideMain();
-						    
-						    hideContentTransition();
-						    
-						    $("#msgServerErro").empty();
-						    $("#msgServerErro").append(JSON.parse(data.responseText));
-						    
-						    $.mobile.loading("hide");
-						    
-						    showContentDialog();						    
-						    
-						}
-					});						
-					
-				}				
 				
 			</script>
 			

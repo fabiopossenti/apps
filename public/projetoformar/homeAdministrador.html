@@ -64,7 +64,7 @@
 				<div style="margin: 5px">
 					  
 					  <div class="ui-corner-all" align="center">
-					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Notificações</b></font>
 					  </div>
 					  
 					  <br/>
@@ -78,7 +78,7 @@
 		<!-- home  -->		
 		
 		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
-			<h1 id="tituloPagina">Projeto FORMAR</h1>
+			<h1 id="tituloPagina" style="margin: 0">Projeto FORMAR</h1>
 			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
 			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
 		</div>
@@ -89,7 +89,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -99,7 +99,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -109,7 +109,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer2" style="font-size: 20px"></div>
+			<div id="msgServer2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
@@ -123,7 +123,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_1" style="font-size: 20px"></div>
+			<div id="msgServer_1" style="font-size: 20px;padding: 1em"></div>
 				<table width="0%" style="padding: 10px">
 					<tr>
 						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -138,7 +138,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_2" style="font-size: 20px"></div>
+			<div id="msgServer_2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -385,7 +385,7 @@
 					
 					$.ajax({
 						type : 'GET',
-						url : "/apps/public/obterFornecedor/"+email_+"/"+iduser_+"/projetoformar/"+perfil_,
+						url : "/apps/public/obterFornecedor/"+email_+"/"+iduser_+"/projetoformar/"+perfil_+"/0/0",
 						dataType : 'json',
 						success : function(data) {
 							if (data.status == true) {
@@ -455,6 +455,79 @@
 					hideContentDialogConfirmacaoExclusao();
 					showMain();
 					resetar();
+				}
+				
+				function convidarAmigo(){
+					
+					var err = false;
+					// Hide the Main content
+					hideMain();
+
+					// Reset the previously highlighted form elements
+					inputMapVar.each(function(index) {
+						$(this).prev().removeClass(MISSING);
+					});
+
+					// Perform form validation
+					inputMapVar.each(function(index) {
+						if ($(this).val() == null || $(this).val() == EMPTY) {
+							$(this).prev().addClass(MISSING);
+							err = true;
+						}
+					});
+
+					// If validation fails, show Dialog content
+					if (err == true) {
+						$("#msgServerErro").empty();
+						$("#msgServerErro").append("Por favor, preencha o e-mail.");					
+						showContentDialog();
+						return false;
+					}
+
+					// If validation passes, show Transition content
+					showContentTransition();
+					
+					$.mobile.loading("show");
+					
+					$.ajax({
+						type: 'POST',
+						data: {"iduser" : iduser_, "emailConvidado" : $('#convite').val(), "email" : email_, "app" : "projetoformar"},
+						url: '/apps/public/cadastrarUsuarioConvite',
+						dataType: 'json',
+						success: function(data){
+							
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServer").empty();
+						    $("#msgServer").append(data);
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog2();
+						    
+						    $('#convite').val("");
+						    
+						    carregar();
+						    
+						},
+						error: function(data){
+						    
+						    hideMain();
+						    
+						    hideContentTransition();
+						    
+						    $("#msgServerErro").empty();
+						    $("#msgServerErro").append(JSON.parse(data.responseText));
+						    
+						    $.mobile.loading("hide");
+						    
+						    showContentDialog();						    
+						    
+						}
+					});						
+					
 				}
 			</script>
 			

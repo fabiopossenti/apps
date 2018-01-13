@@ -42,12 +42,19 @@
 			<div><img src="img/user.png" style="margin-left:5px; width: 40px;position: absolute; top: 10px;"></div>
 			<div id="emailUsuario" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 80px;" ></div>			
 			<div id="perfilSelecionado" style="font-size: 14px; text-shadow: none; margin-left: 5px; font-weight: bold; position: absolute; top: 100px;" ></div>
-			<div style="margin: 5px">
+			<div id="menuComissao" style="margin: 5px;display: none">
 				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="$(window).attr('location', 'homeComissao.html');" style="text-align: left;">Home</a>			
 				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="$(window).attr('location', 'meusDadosComissao.html');" style="text-align: left;background-color: yellow" >Meus Dados</a>
 				<a data-role="button" data-icon="gear" data-position-to="window" href="#" onclick="$(window).attr('location', 'selecionarPerfil.html?ok=1');" style="text-align: left;">Perfil</a>			
 				<a data-role="button" data-icon="power" data-position-to="window" href="#" onclick="$(window).attr('location','login.html?frommenu=1');" style="text-align: left;">Sair</a>
 			</div>
+			<div id="menuAluno" style="margin: 5px;display: none">
+				<a data-role="button" data-icon="home" data-position-to="window" href="#" onclick="$(window).attr('location', 'homeAluno.html');" style="text-align: left;">Home</a>
+				<a data-role="button" data-icon="user" data-position-to="window" href="#" onclick="$(window).attr('location', 'meusDadosAluno.html');" style="text-align: left;" >Meus Dados</a>
+				<a data-role="button" data-icon="search" data-position-to="window" href="#" onclick="$(window).attr('location', 'buscarComissaoAluno.html');" style="text-align: left;" >Buscar Comissão</a>
+				<a data-role="button" data-icon="gear" data-position-to="window" href="#" onclick="$(window).attr('location', 'selecionarPerfil.html?ok=1');" style="text-align: left;">Perfil</a>			
+				<a data-role="button" data-icon="power" data-position-to="window" href="#" onclick="$(window).attr('location','login.html?frommenu=1');" style="text-align: left;">Sair</a>
+			</div>			
 			
 		</div>
 		<!-- menu  -->
@@ -60,7 +67,7 @@
 				<div style="margin: 5px">
 					  
 					  <div class="ui-corner-all" align="center">
-					    <font color="white" size="5px" style="text-shadow: none;"><b>Solicitações</b></font>
+					    <font color="white" size="5px" style="text-shadow: none;"><b>Notificações</b></font>
 					  </div>
 					  
 					  <br/>
@@ -74,7 +81,7 @@
 		<!-- home  -->		
 		
 		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
-			<h1 id="tituloPagina">Projeto FORMAR <br/> Dados da Comissão</h1>
+			<h1 id="tituloPagina" style="margin: 0">Projeto FORMAR <br/> Dados da Comissão</h1>
 			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
 			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
 		</div>
@@ -85,7 +92,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="red"><div id="msgServerErro" style="font-size: 20px"></div></font></b>
+			<b><font color="red"><div id="msgServerErro" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -95,7 +102,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>
-			<b><font color="blue"><div id="msgServer" style="font-size: 20px"></div></font></b>
+			<b><font color="blue"><div id="msgServer" style="font-size: 20px;padding: 1em"></div></font></b>
 			<br/>
 			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true" style="width: 100px" data-theme="b">OK</a>
 		</div>
@@ -105,7 +112,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer2" style="font-size: 20px"></div>
+			<div id="msgServer2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonNao" name="buttonNao" href="#page1" data-role="button" data-inline="true" style="width: 80px">Não</a></td>
@@ -119,7 +126,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_1" style="font-size: 20px"></div>
+			<div id="msgServer_1" style="font-size: 20px;padding: 1em"></div>
 				<table width="0%" style="padding: 10px">
 					<tr>
 						<td width="33%" align="center"><a id="buttonCancelar" name="buttonCancelar" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -134,7 +141,7 @@
 				<h1>Projeto FORMAR</h1>
 			</div>
 			<br/>		
-			<div id="msgServer_2" style="font-size: 20px"></div>
+			<div id="msgServer_2" style="font-size: 20px;padding: 1em"></div>
 				<table width="100%" style="padding: 10px">
 					<tr>
 						<td width="50%" align="right"><a id="buttonCancelar2" name="buttonCancelar2" href="#page1" data-role="button" data-inline="true" style="width: 80px">Cancelar</a></td>
@@ -173,6 +180,9 @@
 							<input type="hidden" name="flexcluir" id="flexcluir">
 							<input type="hidden" name="app" id="app" value="projetoformar">
 							<input type="hidden" name="perfil" id="perfil" value="4">
+							<input type="hidden" name="tipoMembros" id="tipoMembros">
+							<input type="hidden" name="membros" id="membrosVal">
+							<input type="hidden" name="situacoes" id="situacoes">
 						</p>
 						
 						<p>
@@ -194,21 +204,25 @@
 						<input type="hidden" name="MAX_FILE_SIZE" value="1000000" />
 						<input type="file" id="file" name="file" accept="image/png, image/jpeg"/><br /></label>
 						
-						<p>
-							<label for="tipoMembro1"><b>Participante 1:</label>
-							<select name="tipoMembro1" id="tipoMembro1" data-native-menu="false" style="text-align: left !important">
-							<option>Selecione</option>								
-							<option value="1">Participante</option>
-							<option value="2">Presidente</option>
-							<option value="3">Vice-Presidente</option>
-							</select>
-							<input id="membro1" name="membro1_r" maxlength="200" type="email" class="ui-bar-c" value="" placeholder="digite um e-mail..."/>
-						</p>						
+						<div id="membros">
+							<p>
+								<label for="tipoMembro1"><b>Participante 1:</label>
+								<select class="selectMembro" name="tipoMembro1_r" id="tipoMembro1" data-native-menu="false" style="text-align: left !important">
+								<option value="0">Escolha um tipo</option>
+								<option value="3">Participante</option>
+								<option value="1" selected="selected">Presidente</option>
+								<option value="2">Vice-Presidente</option>
+								</select>
+								<input class="inputMembro" id="membro1" name="membro1_r" maxlength="200" type="email" class="ui-bar-c" value="" placeholder="digite um e-mail..."/>
+								<input class="radioSituacao" type="hidden" name="situacao1" id="situacao1" value="1">
+							</p>						
+						</div>
+						<input id="btnAddMembro" onclick="adicionarMembro(false)" type="button" value="Adicionar mais participantes" data-inline="true" data-theme="b"/>
 						
 						<table width="100%">
 							<tr>
 								<!-- CADASTRO -->
-								<td style="width: 50%"><input id="btnVoltar" onclick="$(window).attr('location','homeComissao.html');" type="button" value="Voltar" data-inline="true" data-theme="a"/></td>
+								<td style="width: 50%"><input id="btnVoltar" onclick="history.back()" type="button" value="Voltar" data-inline="true" data-theme="a"/></td>
 								<td style="width: 50%" align="right"><input id="btnConfirmar_" type="submit" value="Confirmar" data-inline="true" data-theme="b"/></td>
 							</tr>
 						</table>						
@@ -228,6 +242,10 @@
 			<script>
 			
 			 	var perfil_;
+			 	
+			 	var countMembro = 1;
+			 	var emailCriador;
+			 	var idComissao;
 			
 				$(document).ready(
 						function() {
@@ -263,6 +281,27 @@
 								$(window).attr('location','login.html');
 							}
 							
+							//Recupera param get
+							(window.onpopstate = function () {
+							    var match,
+							        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+							        search = /([^&=]+)=?([^&]*)/g,
+							        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+							        query  = window.location.search.substring(1);
+		
+							    urlParams = {};
+							    while (match = search.exec(query))
+							       urlParams[decode(match[1])] = decode(match[2]);
+							})();
+							
+							if(urlParams.criador != null){
+								emailCriador = urlParams.criador;
+								idComissao = urlParams.id;
+								$('#menuAluno').show();
+							}else{
+								$('#menuComissao').show();
+							}
+							
 							carregar();
 
 						});
@@ -281,16 +320,13 @@
 					$("#flexcluir").val(null);
 					$("#midia").empty();
 				}
-
 				$('#form1').submit(function() {
 				
 					//if(confirm('A edição de seus dados irão fazer com que sua situação volte para "Em Análise". Confirma a edição?')){
 					
 						if(isArquivoGrande){
 							hideMain();
-
 							hideContentTransition();
-
 							$("#msgServerErro").empty();
 							$("#msgServerErro").append("Tamanho máximo de bytes excedido do arquivo. Tamanho máximo: 1MB.");
 						
@@ -302,12 +338,10 @@
 						var err = false;
 						// Hide the Main content
 						hideMain();
-
 						// Reset the previously highlighted form elements
 						inputMapVar.each(function(index) {
 							$(this).prev().removeClass(MISSING);
 						});
-
 						// Perform form validation
 						inputMapVar.each(function(index) {
 							if ($(this).val() == null || $(this).val() == EMPTY) {
@@ -315,7 +349,6 @@
 								err = true;
 							}
 						});
-
 						// If validation fails, show Dialog content
 						if (err == true) {
 							$("#msgServerErro").empty();
@@ -323,16 +356,37 @@
 							showContentDialog();
 							return false;
 						}
-
 						// If validation passes, show Transition content
 						showContentTransition();
-
+						
+						var tipoMembros = new Array();
+					    $('.selectMembro').each(function() {
+					    	 if($(this).val() != '')
+					    	 	tipoMembros.push($(this).val());
+					    });
+					     
+					    $('#tipoMembros').val(tipoMembros);
+						
+						var membros = new Array();
+					    $('.inputMembro').each(function() {
+					    	membros.push($(this).val());
+					    });
+					     
+					    $('#membrosVal').val(membros);
+					    
+						var situacoes = new Array();
+						situacoes.push(1);
+					    $('.radioSituacao:checked').each(function() {
+					    	situacoes.push($(this).val());
+					    });
+					     
+					    $('#situacoes').val(situacoes);
+					    
 						var form = document.getElementById('form1');
 						var request = new XMLHttpRequest();
-
 						//e.preventDefault();
 						var formdata = new FormData(form);
-
+						
 						request.open('post', '../cadastrarComissao');
 						//request.addEventListener('load', transferComplete, false);
 						request.onreadystatechange = function (aEvt) {
@@ -346,7 +400,6 @@
 						request.send(formdata);
 					
 					//}
-
 					return false;
 				});
 				
@@ -366,19 +419,13 @@
 					}catch(e){
 						
 					}
-
-
 				});				
-
 				function transferComplete(data) {
 					
 					hideMain();
-
 					hideContentTransition();
-
 					$("#msgServer").empty();
 					$("#msgServer").append(JSON.parse(data));
-
 					showContentDialog2();
 					
 					if($('#id').val() == null || $('#id').val() == ''){
@@ -394,44 +441,94 @@
 				function transferFailed(data) {
 					
 					hideMain();
-
 					hideContentTransition();
-
 					$("#msgServerErro").empty();
 					$("#msgServerErro").append(JSON.parse(data));
-
 					showContentDialog();
 					
 				}
-
 				function carregar() {
-
 					$.mobile.loading("show");
+					
+					$("#membro1").attr('readonly',false);
+					$("#membro1").css('background-color','#ffffff');
+					
+					var url = "/apps/public/obterComissoes/"+email_+"/"+iduser_+"/projetoformar/"+perfil_+"/0";
+					if(emailCriador != null && idComissao != null)
+						url = "/apps/public/obterComissaoPresidente/"+email_+"/"+iduser_+"/projetoformar/"+perfil_+"/"+emailCriador+"/"+idComissao;
 					
 					$.ajax({
 						type : 'GET',
-						url : "/apps/public/obterComissao/"+email_+"/"+iduser_+"/projetoformar/"+perfil_,
+						url : url,
 						dataType : 'json',
 						success : function(data) {
 							if (data.status == true) {
 								list = data;
 								if(list.Comissao[0] != null){
 									editar(list.Comissao[0].id_comissao,list.Comissao[0].nome,list.Comissao[0].instituicao,
-											list.Comissao[0].curso,list.Comissao[0].emailPresidente,list.Comissao[0].emailVicePresidente,list.Comissao[0].telefone,list.Comissao[0].caminho_midia);
+											list.Comissao[0].curso,list.Comissao[0].telefone,list.Comissao[0].caminho_midia);
+									
+									removerMembros();
+
+									for (i = 1; i <= list.Comissao.length; i++) {
+										
+										if(i > 1){	
+											//removerMembro(i);
+											adicionarMembro(false);
+										}
+										
+										$('#tipoMembro'+i).val(list.Comissao[i-1].tipo);
+										$('#membro'+i).val(list.Comissao[i-1].emailMembro);
+										$('#tipoMembro'+i).selectmenu('refresh');
+										
+										if(list.Comissao[i-1].email == list.Comissao[i-1].emailMembro){
+											$("#membro"+i).attr('readonly',true);
+											$('#tipoMembro'+i).selectmenu('disable');
+											$('#tipoMembro'+i).selectmenu('refresh');
+											$("#membro"+i).css('background-color','#f4ff81');
+											$("#btRemover"+i).hide();
+											$("#div"+i).css('width','100%');
+											/* if(emailCriador != null && idComissao != null && list.Comissao[i-1].email != email_){
+												$('#tipoMembro'+i).selectmenu('disable');
+												$('#tipoMembro'+i).selectmenu('refresh');
+											} */
+										}else{
+											$('input:radio[name="situacao'+i+'"]').filter('[value="0"]').attr('checked', false).checkboxradio( "refresh" );
+											$('input:radio[name="situacao'+i+'"]').filter('[value="1"]').attr('checked', false).checkboxradio( "refresh" );
+											$('input:radio[name="situacao'+i+'"]').filter('[value="2"]').attr('checked', false).checkboxradio( "refresh" );
+											$('input:radio[name="situacao'+i+'"]').filter('[value="'+list.Comissao[i-1].situacao+'"]').attr('checked', true).checkboxradio( "refresh" );											
+										}
+
+									}
+									
+								}else{
+									$("#membro1").val(email_);
+									$("#membro1").attr('readonly',true);
+									$("#membro1").css('background-color','#f4ff81');
+									$('#tipoMembro1').selectmenu('disable');
+									$('#tipoMembro1').selectmenu('refresh');
+								}
+								
+								if(urlParams.add != null){
+									adicionarMembro(true);
 								}
 	
 							}
 	
 						},
-						error : function() {
-								$.mobile.loading("hide");
+						error : function(data) {
+							
+							if(data.status == 401)
+								$(window).attr('location','login.html?frommenu=1');							
+							
+							$.mobile.loading("hide");
 						}
 					});
 					
 					$.mobile.loading("hide");
 				}
 				
-				function editar(id, nome, insituicao, curso, emailPresidente, emailVicePresidente, telefone, caminho_midia){
+				function editar(id, nome, instituicao, curso, telefone, caminho_midia){
 					
 					$('#formulario').css('background-color','#F4FF81');
 					$('#btnCadastrar').hide();
@@ -448,23 +545,74 @@
 					if(caminho_midia != null){
 						$("#midia").append('<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'uploads/' + 
 								caminho_midia + '\') center center / 200%;"/>');
+					}else{
+						$("#midia").append('<div style="position: relative;width: 100px;height: 100px;margin: -20px;background: url(\'img/semfoto.jpg\') center center / 100%;"/>');
 					}
 					
 					isArquivoGrande = false;
-
+				}
+				
+				function adicionarMembro(focus){
+					
+					$('#membros').append('<div id="membroGroup'+(++countMembro)+'"><hr/><p>'+
+											'<label for="tipoMembro'+countMembro+'"><b>Participante '+countMembro+':</label>'+
+											'<select class="selectMembro" name="tipoMembro'+countMembro+'_r" id="tipoMembro'+countMembro+'" data-native-menu="false" style="text-align: left !important">'+
+											'<option value="0">Escolha um tipo</option>'+
+											'<option value="3">Participante</option>'+
+											'<option value="1">Presidente</option>'+
+											'<option value="2">Vice-Presidente</option>'+
+											'</select>'+
+											'<div class="ui-grid-a"><div id="div'+countMembro+'" class="ui-block-a" style="width: 90%"><input class="inputMembro" id="membro'+countMembro+'" name="membro'+countMembro+'_r" maxlength="200" type="email" class="ui-bar-c" value="" placeholder="digite um e-mail..."/></div>'+
+											'<div class="ui-block-b" align="right" style="width: 10%"><a style="margin-top: 12px;margin-left: 2px" id="btRemover'+countMembro+'" onclick="removerMembro('+countMembro+')" href="#" class="ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all"></a></div></div>'+
+											
+									// situacao
+											'<div class="ui-field-contain">'+
+										    '<fieldset data-role="controlgroup" data-type="horizontal" class="situacao">'+
+										    '    <input class="radioSituacao" type="radio" name="situacao'+countMembro+'" id="situacao3" value="2">'+
+										    '    <label style="font-size: 12px !important" for="situacao3">REPROVADO</label>'+
+										    '    <input class="radioSituacao" type="radio" name="situacao'+countMembro+'" id="situacao1" value="0">'+
+										    '    <label style="font-size: 12px !important" for="situacao1">EM ANÁLISE</label>'+
+										    '    <input class="radioSituacao" type="radio" name="situacao'+countMembro+'" id="situacao2" value="1" checked="checked">'+
+										    '    <label style="font-size: 12px !important" for="situacao2">APROVADO</label>'+
+										    '</fieldset>'+
+											'</div>'+
+											
+										'</p></div>');
+					
+					$("body").trigger("create");
+					
+					if(focus){
+						$("#membro"+countMembro).focus();
+					}
+					
+				}
+				
+				function removerMembro(id){
+					
+					$("#membroGroup"+id).remove();	
+					
+					if(id == countMembro)					
+						countMembro--;
+					
+				}
+				
+				function removerMembros(){
+					
+					for (i = 2; i <= 500; i++) {
+						$("#membroGroup"+i).remove();	
+					}
+					
+					countMembro = 1;
+					
 				}
 				
 				function excluir(){
 					
 					hideMain();
-
 					hideContentTransition();
-
 					$("#msgServer2").empty();
 					$("#msgServer2").append("Confirma a exclusão do registro?");
-
 					showContentDialogConfirmacaoExclusao();					
-
 				}
 				
 				function confirmarExclusao(){

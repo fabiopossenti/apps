@@ -1,15 +1,15 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
+ |--------------------------------------------------------------------------
+ | Application Routes
+ |--------------------------------------------------------------------------
+ |
+ | Here is where you can register all of the routes for an application.
+ | It's a breeze. Simply tell Laravel the URIs it should respond to
+ | and give it the Closure to execute when that URI is requested.
+ |
+ */
 
 //COMUM A TODOS
 Route::post("isLogged",'UsuarioController@postIsLogged');
@@ -47,10 +47,26 @@ Route::get('carregarMeusEventosEnviados/{iduser}/{email}', 'EventoVeiculoControl
 // Route::get('projetoformar', function(){Redirect::to('login.html');});
 Route::get('obterTipoFornecedor/{email}/{iduser}/{app}', 'TipoFornecedorController@getTipos');
 Route::post("cadastrarTipoFornecedor", 'TipoFornecedorController@cadastrar');
-Route::get('obterFornecedor/{email}/{iduser}/{app}/{perfil}', 'FornecedorController@getFornecedores');
+Route::get('obterFornecedor/{email}/{iduser}/{app}/{perfil}/{idComissao}/{idFornecedor}', 'FornecedorController@getFornecedores');
+Route::get('obterFornecedorDaComissao/{email}/{iduser}/{app}/{perfil}/{idComissao}', 'FornecedorController@getFornecedoresDaComissao');
+Route::get('obterFornecedorPorId/{email}/{iduser}/{app}/{perfil}', 'FornecedorController@getFornecedorPorIdUsuario');
 Route::post("cadastrarFornecedor", 'FornecedorController@cadastrar');
 Route::get('obterPerfis/{email}/{iduser}/{app}', 'UsuarioController@carregarPerfis');
 Route::post("incluirPerfil", 'UsuarioController@incluirPerfil');
+Route::get('obterComissoes/{email}/{iduser}/{app}/{perfil}/{busca}', 'ComissaoController@getComissoes');
+Route::post("cadastrarComissao", 'ComissaoController@cadastrar');
+Route::get('obterAluno/{email}/{iduser}/{app}/{perfil}', 'AlunoController@getAlunos');
+Route::post("cadastrarAluno", 'AlunoController@cadastrar');
+Route::get('obterComissao/{email}/{iduser}/{app}/{perfil}/{id}', 'ComissaoController@getComissao');
+Route::get('obterComissaoDoFornecedor/{email}/{iduser}/{app}/{perfil}/{idComissao}/{idFornecedor}', 'ComissaoController@getComissaoDoFornecedor');
+Route::post("ingressarComissao", 'ComissaoController@ingressarComissao');
+Route::get('obterComissaoPresidente/{email}/{iduser}/{app}/{perfil}/{emailCriador}/{id}', 'ComissaoController@getComissaoPresidente');
+Route::post("solicitarOrcamentoFornecedor", 'FornecedorController@solicitarOrcamentoFornecedor');
+Route::post("concederPermissaoPresidente", 'ComissaoController@concederPermissaoPresidenteCerimonial');
+Route::post("removerPermissaoPresidente", 'ComissaoController@removerPermissaoPresidenteCerimonial');
+Route::post("oferecerServicos", 'FornecedorController@oferecerServicos');
+Route::post("incluirFornecedorNaLista", 'ComissaoController@incluirFornecedorNaLista');
+Route::post("removerFornecedorDaLista", 'ComissaoController@removerFornecedorDaLista');
 
 //APP ONCECETA
 // Route::get('ondeceta', function(){Redirect::to('login.html');});
@@ -68,55 +84,55 @@ Route::get('obterPedido/{email}/{iduser}/{app}', 'PedidoController@getPedidos');
 //OUTROS/EM TESTE
 Route::get('/', function()
 {
-	return View::make('hello');
+    return View::make('hello');
 });
 
 //Route::get('loginFacebook', 'UsuarioController@getLoginFacebook');
 
 Route::get('login/fb', function() {
-	$facebook = new Facebook(Config::get('facebook'));
-	$params = array(
-			'redirect_uri' => url('/login/fb/callback'),
-			'scope' => 'email',
-	);
-	
-	return Response::json(array('url' => $facebook->getLoginUrl($params)),200);
-	
-	//return Redirect::to($facebook->getLoginUrl($params));
+    $facebook = new Facebook(Config::get('facebook'));
+    $params = array(
+        'redirect_uri' => url('/login/fb/callback'),
+        'scope' => 'email',
+    );
+    
+    return Response::json(array('url' => $facebook->getLoginUrl($params)),200);
+    
+    //return Redirect::to($facebook->getLoginUrl($params));
 });
-
-Route::get('login/fb/callback', function() {
-	$code = Input::get('code');
-	if (strlen($code) == 0) return Redirect::to('/')->with('message', 'There was an error communicating with Facebook');
-
-	$facebook = new Facebook(Config::get('facebook'));
-	$uid = $facebook->getUser();
-
-	if ($uid == 0) return Redirect::to('/')->with('message', 'There was an error');
-
-	$me = $facebook->api('/me');
-	
-	$usuarioController = new UsuarioController();
-	$usuarioExistente = $usuarioController->isUsuarioExternoExistente($me['email']);
-	
-	if($usuarioExistente){
-		return Redirect::to('inicio.html?email='.$me['email'].'&fb=true&iduser='.$usuarioExistente);
-	}else{
-		$userFace = $usuarioController->cadastrarUsuarioExterno($me['email']);
-		if($userFace){
-			return Redirect::to('inicio.html?email='.$me['email'].'&fb=true&iduser='.$userFace);
-		}else{
-			return Redirect::to('login.html?email='.$me['email'].'&fb=true&msg=usuarioExistente');
-		}
-	}
-
-	//echo $usuarioExistente;
-	
-	//return Redirect::to('inicio.html?email='.$me['email'].'&fb=true');
-	
-	//return Response::json(array('usuario' => $me),200);
-
-	//dd($me);
-});
-
-Route::post("loginGoogle",'UsuarioController@postLoginGoogle');
+    
+    Route::get('login/fb/callback', function() {
+        $code = Input::get('code');
+        if (strlen($code) == 0) return Redirect::to('/')->with('message', 'There was an error communicating with Facebook');
+        
+        $facebook = new Facebook(Config::get('facebook'));
+        $uid = $facebook->getUser();
+        
+        if ($uid == 0) return Redirect::to('/')->with('message', 'There was an error');
+        
+        $me = $facebook->api('/me');
+        
+        $usuarioController = new UsuarioController();
+        $usuarioExistente = $usuarioController->isUsuarioExternoExistente($me['email']);
+        
+        if($usuarioExistente){
+            return Redirect::to('inicio.html?email='.$me['email'].'&fb=true&iduser='.$usuarioExistente);
+        }else{
+            $userFace = $usuarioController->cadastrarUsuarioExterno($me['email']);
+            if($userFace){
+                return Redirect::to('inicio.html?email='.$me['email'].'&fb=true&iduser='.$userFace);
+            }else{
+                return Redirect::to('login.html?email='.$me['email'].'&fb=true&msg=usuarioExistente');
+            }
+        }
+        
+        //echo $usuarioExistente;
+        
+        //return Redirect::to('inicio.html?email='.$me['email'].'&fb=true');
+        
+        //return Response::json(array('usuario' => $me),200);
+        
+        //dd($me);
+    });
+        
+        Route::post("loginGoogle",'UsuarioController@postLoginGoogle');

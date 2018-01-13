@@ -13,7 +13,7 @@
 		<br/>
 		
 		<div>
-			<?php echo utf8_encode($link); ?>
+			<a href="<?php echo utf8_encode($link); ?>"><?php echo utf8_encode($link); ?></a>
 		</div>
 		
 	</body>

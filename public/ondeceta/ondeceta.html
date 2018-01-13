@@ -86,7 +86,7 @@
 		<!-- home  -->		
 		
 		<div data-role="header" id="hdrMain" name="hdrMain" data-theme="a">
-			<h1 id="tituloPagina">Projeto FORMAR</h1>
+			<h1 id="tituloPagina" style="margin: 0">Projeto FORMAR</h1>
 			<a href="#menu" data-icon="bars" data-iconpos="notext" data-rel="dialog" data-transition="fade">Menu</a>
 			<a id="btHome" href="#home" data-icon="bullets" data-iconpos="notext" data-direction="reverse" data-transition="fade">Home</a>			
 		</div>
@@ -835,7 +835,7 @@
 					
 					$.ajax({
 						type: 'POST',
-						data: {"iduser" : iduser_, "emailConvidado" : $('#convite').val(), "email" : email_},
+						data: {"iduser" : iduser_, "emailConvidado" : $('#convite').val(), "email" : email_, "app" : "ondeceta"},
 						url: '/apps/public/cadastrarUsuarioConvite',
 						dataType: 'json',
 						success: function(data){

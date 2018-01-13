@@ -56,3 +56,31 @@ $(document).ready(
 			hideContentDialogConfirmacao1();
 			hideContentDialogConfirmacao2();
 });
+
+function obterSituacaoAlunoNaComissao(id){
+	
+	if(id == 1)
+		return "Aprovado";
+	else if(id == 0)
+		return "Em Analise";
+	else if(id == 2)
+		return "Reprovado";
+	else
+		return "N/A";
+	
+}
+
+function obterTipoAlunoNaComissao(id){
+	
+	if(id == 1)
+		return "Presidente";
+	else if(id == 0)
+		return "N/A";
+	else if(id == 2)
+		return "Vice-Presidente";
+	else if(id == 3)
+		return "Participante";	
+	else
+		return "N/A";
+	
+}

@@ -103,7 +103,7 @@
 								<input type="checkbox" value="4" id="perfilComissao" name="perfilComissao"/>
 								<label for="perfilComissao">COMISSÃO</label>
 								<input type="checkbox" value="2" id="perfilFornecedor" name="perfilFornecedor"/>
-								<label for="perfilFornecedor">FORNECEDOR</label>
+								<label for="perfilFornecedor">FORNECEDOR/CERIMONIAL</label>
 							</p>
 						</div>
 						<hr>
@@ -167,7 +167,7 @@
 		</div>
 		
 		<div align="CENTER" data-role="content" id="contentDialog2" name="contentDialog2">
-			<div id="msgServer" style="font-size: 20px"></div>
+			<div id="msgServer" style="font-size: 20px;padding: 1em"></div>
 			<a id="buttonOK2" name="buttonOK2" href="#page1" data-role="button" data-inline="true">OK</a>
 		</div>		
 		
@@ -186,6 +186,11 @@
 </body>
 
 			<script>
+			
+				//var idComissao = null;
+				var idFornecedor = null;
+				var tipo = null;
+			
 				$(document).ready(
 					function() {
 						// Assign global variables
@@ -223,6 +228,25 @@
 						if(urlParams.email != null){
 							$('#email').val(urlParams.email);
 						}
+						
+						if(urlParams.id_ != null){
+							if(urlParams.perfil != null && urlParams.perfil == '2')
+								idFornecedor = urlParams.id_; 
+							//else if(urlParams.perfil != null && urlParams.perfil == '1') // para ser usado no aluno
+								//idComissao = urlParams.id_; 
+						}						
+						
+						if(urlParams.tipo != null){
+							tipo = urlParams.tipo; 
+						}						
+						
+						if(urlParams.perfil != null){
+							if(urlParams.perfil != null && urlParams.perfil == '2')
+								$('#perfilFornecedor').prop("checked", true).checkboxradio('refresh');
+							else if(urlParams.perfil != null && urlParams.perfil == '1') // para ser usado no aluno
+								$('#perfilAluno').prop("checked", true).checkboxradio('refresh');
+							
+						}						
 						
 						/* $('#btnLimparTudo').click(
 								function() {
@@ -314,7 +338,8 @@
 					     
 						$.ajax({
 							type: 'POST',
-							data: {"email" : $('#email').val(), "password" : $('#senha').val(), "confirmation" : $('#senhaconf').val(), "iduser": urlParams.id, "app" : "projetoformar", "perfil" : allVals},
+							data: {"email" : $('#email').val(), "password" : $('#senha').val(), "confirmation" : $('#senhaconf').val(), 
+								"iduser": urlParams.id, "app" : "projetoformar", "perfil" : allVals, "fornecedor" : idFornecedor, "tipo" : tipo},
 							url: '/apps/public/cadastrarUsuario',
 							dataType: 'json',
 							success: function(data){

@@ -101,17 +101,36 @@ class UsuarioConviteController extends Controller {
                 //$actual_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                 
                 if($emailUsuarioJaConvidado){
-                    $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/login.html";
-                    Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para ser seu amigo.",'link' => $actual_link), function($message)
-                    {
-                        $message->to(strtolower(trim(Input::get('emailConvidado'))),strtolower(trim(Input::get('emailConvidado'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
-                    });
+                    if($app == 'ondeceta'){
+                        $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/login.html";
+                        Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para ser seu amigo.",'link' => $actual_link), function($message)
+                        {
+                            $message->to(strtolower(trim(Input::get('emailConvidado'))),strtolower(trim(Input::get('emailConvidado'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
+                        });
+                    }else if($app == 'projetoformar'){
+                        $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/login.html";
+                        Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para ser seu amigo.",'link' => $actual_link), function($message)
+                        {
+                            $message->to(strtolower(trim(Input::get('emailConvidado'))),strtolower(trim(Input::get('emailConvidado'))))->subject(utf8_encode('Convite Projeto Formar'));
+                        });
+                        
+                    }
                 }else{
-                    $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/cadastro_oct.html?id=".$usuario->id_usuario."&email=".$emailConvidado;
-                    Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para entrar no OndeCeTá?.",'link' => $actual_link), function($message)
-                    {
-                        $message->to(strtolower(trim(Input::get('emailConvidado'))),strtolower(trim(Input::get('emailConvidado'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
-                    });
+                    if($app == 'ondeceta'){
+                        $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/cadastro_oct.html?id=".$usuario->id_usuario."&email=".$emailConvidado;
+                        Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para entrar no OndeCeTá?.",'link' => $actual_link), function($message)
+                        {
+                            $message->to(strtolower(trim(Input::get('emailConvidado'))),strtolower(trim(Input::get('emailConvidado'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
+                        });
+                    }else if($app == 'projetoformar'){
+                        $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/cadastro.html?id=".$usuario->id_usuario."&email=".$emailConvidado;
+                        Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para entrar no Projeto Formar.",'link' => $actual_link), function($message)
+                        {
+                            $message->to(strtolower(trim(Input::get('emailConvidado'))),strtolower(trim(Input::get('emailConvidado'))))->subject(utf8_encode('Convite Projeto Formar'));
+                        });
+                        
+                    }
+
                     
                 }
                 
@@ -121,7 +140,7 @@ class UsuarioConviteController extends Controller {
             
             return Response::json(array(utf8_encode('Convite enviado com sucesso!')), 200);
         }else{
-            return Response::json(array(utf8_encode('Email Inválido!')),401);
+            return Response::json(array(utf8_encode('E-mail Inválido!')),401);
         }
         
     }
@@ -245,19 +264,43 @@ class UsuarioConviteController extends Controller {
         $usuario = Usuario::where('id_usuario','=',$iduser)->first();
         
         try{
-            $usuarioConvidado = Usuario::where('email','=',$email)->firstOrFail();
-            $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/ondeceta/login.html";
-            Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para ser seu amigo.",'link' => $actual_link), function($message)
-            {
-                $message->to(strtolower(trim(Input::get('email'))),strtolower(trim(Input::get('email'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
-            });
+            if($app == 'ondeceta'){
+                $usuarioConvidado = Usuario::where('email','=',$email)->firstOrFail();
+                $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/login.html";
+                Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para ser seu amigo.",'link' => $actual_link), function($message)
+                {
+                    $message->to(strtolower(trim(Input::get('email'))),strtolower(trim(Input::get('email'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
+                });
+            }else if($app == 'projetoformar'){
+                $usuarioConvidado = Usuario::where('email','=',$email)->firstOrFail();
+                $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/login.html";
+                Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para ser seu amigo.",'link' => $actual_link), function($message)
+                {
+                    $message->to(strtolower(trim(Input::get('email'))),strtolower(trim(Input::get('email'))))->subject(utf8_encode('Convite Projeto Formar'));
+                });
+                
+            }
+
         }catch(Exception $e) {
-            Log::info('Usuário não cadastrado');
-            $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/ondeceta/cadastro_oct.html?id=".$usuario->id_usuario."&email=".$email;
-            Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para entrar no OndeCeTá?.",'link' => $actual_link), function($message)
-            {
-                $message->to(strtolower(trim(Input::get('email'))),strtolower(trim(Input::get('email'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
-            });
+            
+            if($app == 'ondeceta'){
+                Log::info('Usuário não cadastrado');
+                $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/cadastro_oct.html?id=".$usuario->id_usuario."&email=".$email;
+                Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para entrar no OndeCeTá?.",'link' => $actual_link), function($message)
+                {
+                    $message->to(strtolower(trim(Input::get('email'))),strtolower(trim(Input::get('email'))))->subject(utf8_encode('Tem alguém querendo saber se você já está chegando...'));
+                });
+            }else if($app == 'projetoformar'){
+                Log::info('Usuário não cadastrado');
+                $actual_link = "https" . "://$_SERVER[HTTP_HOST]"."/apps/public/".$app."/cadastro.html?id=".$usuario->id_usuario."&email=".$email;
+                Mail::send('alertmailondeceta', array('key' => 'value','texto' => "O usuário ".$usuario->email." está te convidando para entrar no Projeto Formar.",'link' => $actual_link), function($message)
+                {
+                    $message->to(strtolower(trim(Input::get('email'))),strtolower(trim(Input::get('email'))))->subject(utf8_encode('Convite Projeto Formar'));
+                });
+                
+            }
+            
+
         }
         
         return Response::json(array(utf8_encode('Convite reenviado com sucesso!')), 200);
